@@ -1,0 +1,25 @@
+name: Docker Image CI - javaserver
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'javaserver/**'
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - 'javaserver/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ github.sha }}  # 커밋 해시를 태그로 사용
+    steps:
+      # 1. 소스코드 체크아웃
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # 2. Docker 빌드
+      - name: Build Docker image
+        run: docker build -t javaserver:${TAG} javaserver/
