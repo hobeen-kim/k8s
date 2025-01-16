@@ -17,10 +17,15 @@ spec:
     spec:
       containers:
         - name: java-app
-          image: nginx:alpine
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          image: sksjsksh32/k8s-javaserver:0054dde81b0b0c7c5553a274fed8e556e4593bfb
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 80
+            - containerPort: 8080
               protocol: TCP
       restartPolicy: Always
 ---
@@ -31,8 +36,8 @@ metadata:
 spec:
   ports:
     - name: java-app-svc
-      port: 80
-      targetPort: 80
+      port: 8080
+      targetPort: 8080
       nodePort: 31100
   selector:
     app: java-app
