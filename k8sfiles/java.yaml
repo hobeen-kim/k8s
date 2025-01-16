@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: javaserver
+  labels:
+    app: javaserver
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: javaserver
+  template:
+    metadata:
+      name: javaserver
+      labels:
+        app: javaserver
+    spec:
+      containers:
+        - name: javaserver
+          image: javaserver
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+      restartPolicy: Always
+      
