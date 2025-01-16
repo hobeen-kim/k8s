@@ -1,26 +1,39 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: javaserver
+  name: java-app
   labels:
-    app: javaserver
+    app: java-app
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: javaserver
+      app: java-app
   template:
     metadata:
-      name: javaserver
+      name: java-app
       labels:
-        app: javaserver
+        app: java-app
     spec:
       containers:
-        - name: javaserver
-          image: javaserver
+        - name: java-app
+          image: nginx:alpine
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8080
+            - containerPort: 80
               protocol: TCP
       restartPolicy: Always
-      
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: java-app
+spec:
+  ports:
+    - name: java-app-svc
+      port: 80
+      targetPort: 80
+      nodePort: 31100
+  selector:
+    app: java-app
+  type: NodePort
