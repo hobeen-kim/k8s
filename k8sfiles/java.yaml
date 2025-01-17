@@ -22,7 +22,7 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
-          image: sksjsksh32/k8s-javaserver:0054dde81b0b0c7c5553a274fed8e556e4593bfb
+          image: sksjsksh32/k8s-javaserver:3cdf0af0038c2b1d8ea93969e905d2215fdb4088
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -38,7 +38,7 @@ spec:
     - name: java-app-svc
       port: 8080
       targetPort: 8080
-      nodePort: 31100
+      nodePort: 8080
   selector:
     app: java-app
   type: NodePort
