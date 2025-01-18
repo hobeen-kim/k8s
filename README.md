@@ -2,6 +2,7 @@
 
 # 0. 사용 기술
  - kotlin/spring, vue.js
+ - mongoDB
  - websocket(stomp)
  - kafka
  - kubenetes
@@ -34,3 +35,6 @@
     - zookeeper 실행
     - kafka 실행 (localhost:9092, 29092) - 로컬용, 도커용 리스너
     - raw-article 토픽 생성
+
+## 1.3. 각종 컨테이너 배포
+- `k8sfiles/k8s.sh` 실행

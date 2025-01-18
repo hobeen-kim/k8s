@@ -38,7 +38,7 @@ spec:
     - name: java-app-svc
       port: 8080
       targetPort: 8080
-      nodePort: 8080
+      nodePort: 31100
   selector:
     app: java-app
   type: NodePort

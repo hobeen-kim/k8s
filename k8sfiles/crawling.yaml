@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: crawling
 spec:
-  schedule: "* * * * *"
+  schedule: "0/5 * * * *"
   jobTemplate:
     spec:
       ttlSecondsAfterFinished: 100
@@ -14,6 +14,6 @@ spec:
               env:
                 - name: PROFILE
                   value: "prod"
-              image: sksjsksh32/k8s-crawling:09de9b8140e9371ebc4bec1b6bcc3c185250ed3c
+              image: sksjsksh32/k8s-crawling:79dd267bf9be378cf362533dfaf300846a911171
               imagePullPolicy: IfNotPresent
           restartPolicy: OnFailure
