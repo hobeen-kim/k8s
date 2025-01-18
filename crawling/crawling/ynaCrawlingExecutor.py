@@ -11,6 +11,7 @@ from producer.producer import send_data
 # 섹션
 sections = {
     "politics": "정치",
+    "north-korea": "북한",
 }
 
 async def produce_yna_news_data():
