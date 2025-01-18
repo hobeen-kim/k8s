@@ -5,6 +5,8 @@ import aiohttp
 from bs4 import BeautifulSoup
 from newspaper import Article
 
+from entity.articleData import ArticleData
+from producer.producer import send_data
 
 # 섹션
 sections = {
@@ -80,13 +82,9 @@ async def get_news_list(session: aiohttp.ClientSession, url: str, page: int, sec
         # 결과 조합
         articles = []
         for task_info, content in zip(tasks, contents):
-            articles.append({
-                'title': task_info['title'],
-                'url': task_info['url'],
-                'time': task_info['time'],
-                'section': task_info['section'],
-                'content': content
-            })
+            articles.append(
+                ArticleData(task_info['title'], task_info['url'], task_info['time'], task_info['section'], content)
+            )
 
         return articles
 
@@ -107,3 +105,22 @@ async def extract_content(url: str, session: aiohttp.ClientSession):
     except Exception as e:
         print(f"Error extracting content from {url}: {str(e)}")
         return "내용을 가져올 수 없습니다."
+
+
+# 메인 함수
+if __name__ == "__main__":
+    start_time = time.time()
+
+    loop = asyncio.get_event_loop()
+    news_articles = loop.run_until_complete(produce_yna_news_data())
+
+    print(f"\n총 {len(news_articles)}개의 기사를 찾았습니다. 소요시간: {time.time() - start_time:.2f}초")
+
+    start_time = time.time()
+
+    loop.run_until_complete(send_data(news_articles))
+
+    print("전송 완료. 소요시간: ", time.time() - start_time)
+
+    for article in news_articles:
+        print(article.json())
