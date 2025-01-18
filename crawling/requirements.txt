@@ -1,0 +1,7 @@
+beautifulsoup4==4.12.3
+aiohttp==3.11.11
+newspaper3k==0.2.8
+lxml==5.3.0
+lxml_html_clean==0.4.1
+kafka-python==2.0.2
+python-dotenv==1.0.1
