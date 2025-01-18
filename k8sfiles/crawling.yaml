@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: crawling
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 100
+      template:
+        spec:
+          containers:
+            - name: crawling
+              env:
+                - name: PROFILE
+                  value: "prod"
+              image: sksjsksh32/k8s-crawling:6af0e943d70b1e238cb8158122cabb0953e81dff
+              imagePullPolicy: IfNotPresent
+          restartPolicy: OnFailure

@@ -112,6 +112,8 @@ async def extract_content(url: str, session: aiohttp.ClientSession):
 if __name__ == "__main__":
     start_time = time.time()
 
+    print("뉴스 기사 수집 시작")
+
     loop = asyncio.get_event_loop()
     news_articles = loop.run_until_complete(produce_yna_news_data())
 
@@ -122,6 +124,3 @@ if __name__ == "__main__":
     loop.run_until_complete(send_data(news_articles))
 
     print("전송 완료. 소요시간: ", time.time() - start_time)
-
-    for article in news_articles:
-        print(article.json())

@@ -3,13 +3,11 @@ from typing import List
 
 from kafka import KafkaProducer
 import json
+from entity.articleData import ArticleData
 from dotenv import load_dotenv
 
-from entity.articleData import ArticleData
-
 profile = os.getenv("PROFILE", "dev")
-load_dotenv(dotenv_path=f".env.{profile}")
-
+load_dotenv(dotenv_path=f"crawling/.env.{profile}")
 
 class MessageProducer:
     broker = ""
@@ -39,11 +37,14 @@ class MessageProducer:
 
 async def send_data(data: List[ArticleData]):
 
-    topic = os.getenv("TOPIC", "raw_article")
+    loc = os.getcwd()
+
+    topic = os.getenv("TOPIC", "raw-article")
     broker = os.getenv("BROKER", "localhost:9092")
+
+    print(f"Sending data to Kafka {loc}, {profile}, {topic}, {broker}")
 
     message_producer: MessageProducer = MessageProducer(broker, topic)
 
     for article in data:
-        res = message_producer.send_message(article.json())
-        print(f"{res}, {topic}, {broker}")
+        message_producer.send_message(article.json())
