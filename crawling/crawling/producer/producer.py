@@ -18,7 +18,7 @@ class MessageProducer:
         self.broker = broker
         self.topic = topic
         self.producer = KafkaProducer(bootstrap_servers=self.broker,
-                                      value_serializer=lambda x: json.dumps(x).encode('utf-8'),
+                                      value_serializer=lambda x: json.dumps(x, ensure_ascii=False).encode('utf-8'),
                                       acks=0,
                                       api_version=(3,9,0),
                                       retries=3

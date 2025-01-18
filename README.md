@@ -1,10 +1,17 @@
 시작하세요! 도커/쿠버네티스 책을 읽고 구현한 k8s 로컬 실습
 
-# 사용 기술
+# 0. 사용 기술
  - kotlin/spring, vue.js
  - websocket(stomp)
  - kafka
  - kubenetes
+
+# 1. 디렉토리
+- `kafka` : kafka 설치 스크립트
+- `kind` : kind 클러스터 생성 스크립트
+- `k8sfiles` : k8s 리소스 파일
+- `crawling` : 뉴스 사이트에서 뉴스를 읽어서 kafka 토픽에 전송하는 서비스
+- `k8s-java-consumer` : kafka 토픽에서 뉴스를 읽어서 데이터를 정제하고 DB에 저장하는 서비스
 
 # 1. 실행 환경
 - macOS
