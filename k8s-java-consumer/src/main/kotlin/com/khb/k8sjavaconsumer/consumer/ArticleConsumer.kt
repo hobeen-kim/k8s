@@ -13,7 +13,7 @@ class ArticleConsumer(
     private val articleRepository: ArticleRepository,
 ) {
 
-    final val logger = LoggerFactory.getLogger(ArticleConsumer::class.java)
+    private val logger = LoggerFactory.getLogger(ArticleConsumer::class.java)
 
     @KafkaListener(
         topics = ["raw-article"],
