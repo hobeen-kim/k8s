@@ -5,6 +5,7 @@ import com.khb.k8sjavaconsumer.dto.Article
 import com.khb.k8sjavaconsumer.producer.DeadLetterQueue
 import com.khb.k8sjavaconsumer.producer.RefinedArticleProducer
 import com.khb.k8sjavaconsumer.repository.ArticleRepository
+import com.khb.k8sjavaconsumer.service.gpt.GptService
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.*
@@ -47,6 +48,8 @@ class ArticleConsumerTest {
     lateinit var refinedArticleProducer: RefinedArticleProducer
     @MockBean
     lateinit var deadLetterQueue: DeadLetterQueue
+    @MockBean
+    lateinit var gptService: GptService
 
     @Test
     @DisplayName("Kafka Listener 테스트 - ArticleConsumer")
@@ -92,6 +95,8 @@ class ArticleConsumerTest {
 
         //then
         verify(articleRepository, times(1)).save(any())
+        verify(gptService, times(1)).summarizeArticle(any())
+        verify(refinedArticleProducer, times(1)).send(any())
 
     }
 }

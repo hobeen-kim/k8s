@@ -36,9 +36,9 @@ class ArticleConsumer(
                 return
             }
 
-            article.addGptSummary()
+            article.appendGptSummary()
 
-            article.save()
+            articleRepository.save(article)
 
             articleProducer.send(article)
 
@@ -67,17 +67,12 @@ class ArticleConsumer(
         return articleRepository.existsById(this.articleId)
     }
 
-    private fun Article.addGptSummary() {
+    private fun Article.appendGptSummary() {
         val gptResponse = gptService.summarizeArticle(this.content)
 
         this.updateGptSummary(
             gptResponse.summary,
-            gptResponse.tags
         )
 
-    }
-
-    private fun Article.save() {
-        articleRepository.save(this)
     }
 }

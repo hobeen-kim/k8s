@@ -17,8 +17,8 @@ data class Article (
     val time: LocalDateTime,
     val section: String,
     val content: String,
+    var tags: List<String>,
     var summary: String? = null,
-    var tags: List<String>? = null
 ) {
 
     companion object {
@@ -31,9 +31,9 @@ data class Article (
             val time = runCatching { (values["time"] as String?)?.let { toLocalDateTime(it) } }.getOrNull()
             val section = values["section"] as String?
             val content = values["content"] as String?
+            val tags = values["tags"] as List<String>?
 
             if(title.isNullOrBlank() || url.isNullOrBlank() || time == null || section.isNullOrBlank() || content.isNullOrBlank()) {
-                //TODO: DLQ
                 println("Invalid data's title: $title")
                 return null
             }
@@ -46,7 +46,8 @@ data class Article (
                 url = url,
                 time = time,
                 section = section,
-                content = content
+                content = content,
+                tags = tags ?: emptyList()
             )
         }
 
@@ -72,16 +73,14 @@ data class Article (
             return LocalDateTime.of(year, month, day, hour, minute)
         }
 
-        private fun of(articleId: String, title: String, url: String, time: LocalDateTime, section: String, content: String): Article {
-            return Article(articleId, title, url, time, section, content)
+        private fun of(articleId: String, title: String, url: String, time: LocalDateTime, section: String, content: String, tags: List<String>): Article {
+            return Article(articleId, title, url, time, section, content, tags)
         }
     }
 
     fun updateGptSummary(
         summary: String,
-        tags: List<String>
     ) {
         this.summary = summary
-        this.tags = tags
     }
 }
