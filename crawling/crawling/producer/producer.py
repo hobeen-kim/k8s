@@ -37,7 +37,7 @@ class MessageProducer:
 
 async def send_data(data: List[ArticleData]):
 
-    topic = os.getenv("TOPIC", "raw-article")
+    topic = os.getenv("TOPIC", "raw-article-dev")
     broker = os.getenv("BROKER", "localhost:9092")
 
     message_producer: MessageProducer = MessageProducer(broker, topic)

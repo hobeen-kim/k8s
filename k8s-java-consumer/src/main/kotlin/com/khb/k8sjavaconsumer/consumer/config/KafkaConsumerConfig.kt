@@ -1,4 +1,4 @@
-package com.khb.k8sjavaconsumer.config
+package com.khb.k8sjavaconsumer.consumer.config
 
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
@@ -10,7 +10,7 @@ import org.springframework.kafka.core.ConsumerFactory
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 
 @Configuration
-class KafkaConsumerConfig {
+open class KafkaConsumerConfig {
 
     @Value("\${spring.kafka.consumer.bootstrap-servers}")
     private val bootstrapServers: String = "localhost:9092"
@@ -18,7 +18,7 @@ class KafkaConsumerConfig {
     private val groupId: String = "group_1"
 
     @Bean
-    fun consumerFactory(): ConsumerFactory<String, Any> {
+    open fun consumerFactory(): ConsumerFactory<String, Any> {
         val config = mutableMapOf<String, Any>()
 
         config[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapServers
@@ -30,7 +30,7 @@ class KafkaConsumerConfig {
     }
 
     @Bean
-    fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, Any> {
+    open fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, Any> {
         val factory = ConcurrentKafkaListenerContainerFactory<String, Any>()
         factory.consumerFactory = consumerFactory()
 
