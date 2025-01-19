@@ -1,10 +1,9 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: mongodb
 spec:
-  serviceName: "mongodb-service"
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: mongodb
@@ -29,23 +28,43 @@ spec:
                 secretKeyRef:
                   name: mongodb-secret
                   key: mongodb-root-password
-            - name: REPLICA_SET_NAME
-              value: "rs0"
           volumeMounts:
             - name: mongodb-data
               mountPath: /data/db
-            - name: mongodb-init-replica
-              mountPath: /docker-entrypoint-initdb.d
       volumes:
-        - name: mongodb-init-replica
-          configMap:
-            name: mongodb-configmap
-            defaultMode: 0755
-  volumeClaimTemplates:
-    - metadata:
-        name: mongodb-data
-      spec:
-        accessModes: [ "ReadWriteOnce" ]
-        resources:
-          requests:
-            storage: 10Gi
+        - name: mongodb-data
+          persistentVolumeClaim:
+            claimName: mongodb-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongodb-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-service
+spec:
+  selector:
+    app: mongodb
+  ports:
+    - port: 27017
+      targetPort: 27017
+      nodePort: 31200
+  type: NodePort
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mongodb-secret
+type: Opaque
+stringData:
+  mongodb-root-username: "admin"
+  mongodb-root-password: "password123"
