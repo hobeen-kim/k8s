@@ -30,6 +30,9 @@ dependencies {
 
     //h2
     implementation("com.h2database:h2")
+
+    //websocket
+    implementation("org.springframework.boot:spring-boot-starter-websocket")
 }
 
 kotlin {
