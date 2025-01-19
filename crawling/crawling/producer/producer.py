@@ -37,12 +37,8 @@ class MessageProducer:
 
 async def send_data(data: List[ArticleData]):
 
-    loc = os.getcwd()
-
     topic = os.getenv("TOPIC", "raw-article")
     broker = os.getenv("BROKER", "localhost:9092")
-
-    print(f"Sending data to Kafka {loc}, {profile}, {topic}, {broker}")
 
     message_producer: MessageProducer = MessageProducer(broker, topic)
 
