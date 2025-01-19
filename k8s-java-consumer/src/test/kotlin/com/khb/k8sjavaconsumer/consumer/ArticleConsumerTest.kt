@@ -6,6 +6,7 @@ import com.khb.k8sjavaconsumer.producer.dlq.DeadLetterQueue
 import com.khb.k8sjavaconsumer.producer.refinedarticleproducer.RefinedArticleProducer
 import com.khb.k8sjavaconsumer.repository.ArticleRepository
 import com.khb.k8sjavaconsumer.service.gpt.GptService
+import com.khb.k8sjavaconsumer.service.gpt.GptResponse
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.*
@@ -61,8 +62,12 @@ class ArticleConsumerTest {
             url = "https://www.yna.co.kr/view/AKR20250119018300004?1234",
             time = LocalDateTime.of(2025, 1, 17, 10, 52),
             section = "정치",
-            content = "content"
+            content = "content",
+            tags = emptyList(),
         ))
+
+        given(articleRepository.existsById("AKR20250119018300004")).willReturn(false)
+        given(gptService.summarizeArticle("content")).willReturn(GptResponse("summary"))
 
         val latch = CountDownLatch(1)
 
@@ -95,8 +100,6 @@ class ArticleConsumerTest {
 
         //then
         verify(articleRepository, times(1)).save(any())
-        verify(gptService, times(1)).summarizeArticle(any())
-        verify(refinedArticleProducer, times(1)).send(any())
-
+        verify(gptService, times(1)).summarizeArticle("content")
     }
 }

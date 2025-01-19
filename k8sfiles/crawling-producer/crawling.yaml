@@ -14,6 +14,6 @@ spec:
               env:
                 - name: PROFILE
                   value: "prod"
-              image: sksjsksh32/k8s-crawling:ad8f7efbfa3853b907db933310d66bb562d953e2
+              image: sksjsksh32/k8s-crawling:2438a8dede505a675fb6558b2461fc313423930d
               imagePullPolicy: IfNotPresent
           restartPolicy: OnFailure

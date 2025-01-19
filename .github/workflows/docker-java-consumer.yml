@@ -1,4 +1,4 @@
-name: Docker Image CI - javaserver
+name: Docker Image CI - java-consumer
 
 on:
   push:
