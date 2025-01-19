@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: java-consumer
+  labels:
+    app: java-consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: java-consumer
+  template:
+    metadata:
+      name: java-consumer
+      labels:
+        app: java-consumer
+    spec:
+      containers:
+        - name: java-consumer
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+          image: sksjsksh32/k8s-javaserver:3cdf0af0038c2b1d8ea93969e905d2215fdb4088
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
