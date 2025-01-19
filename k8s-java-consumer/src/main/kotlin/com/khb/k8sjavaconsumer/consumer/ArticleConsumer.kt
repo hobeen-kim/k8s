@@ -29,7 +29,6 @@ class ArticleConsumer(
             }
 
             articleRepository.save(article)
-            logger.info("Save article: $article")
         } catch (e: DuplicateKeyException) {
             logger.error("Duplicated article: ${data.value()}")
         } catch (e: Exception) {
