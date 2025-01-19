@@ -1,18 +1,17 @@
-package com.khb.k8sjavaconsumer.producer
+package com.khb.k8sjavaconsumer.producer.dlq
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Component
 
 @Component
-class DeadLetterQueue(
+class KafkaDeadLetterQueue(
     private val kafkaTemplate: KafkaTemplate<String, String>,
-) {
-
     @Value("\${custom.kafka.dlq.topic}")
     private val topic: String = "raw-article-dlq"
+): DeadLetterQueue {
 
-    fun send(rawArticle: String) {
+    override fun send(rawArticle: String) {
         kafkaTemplate.send(topic, rawArticle)
     }
 }

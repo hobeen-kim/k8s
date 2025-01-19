@@ -1,8 +1,8 @@
 package com.khb.k8sjavaconsumer.consumer
 
 import com.khb.k8sjavaconsumer.dto.Article
-import com.khb.k8sjavaconsumer.producer.DeadLetterQueue
-import com.khb.k8sjavaconsumer.producer.RefinedArticleProducer
+import com.khb.k8sjavaconsumer.producer.dlq.DeadLetterQueue
+import com.khb.k8sjavaconsumer.producer.refinedarticleproducer.RefinedArticleProducer
 import com.khb.k8sjavaconsumer.repository.ArticleRepository
 import com.khb.k8sjavaconsumer.service.gpt.GptService
 import com.khb.k8sjavaconsumer.utils.exception.BusinessException

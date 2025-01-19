@@ -1,4 +1,4 @@
-package com.khb.k8sjavaconsumer.producer
+package com.khb.k8sjavaconsumer.producer.refinedarticleproducer
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.khb.k8sjavaconsumer.dto.Article
@@ -11,12 +11,10 @@ import org.springframework.stereotype.Component
 class RefinedArticleProducer(
     private val kafkaTemplate: KafkaTemplate<String, String>,
     @Qualifier("producerObjectMapper")
-    private val objectMapper: ObjectMapper
-) {
-
+    private val objectMapper: ObjectMapper,
     @Value("\${custom.kafka.producer.topic}")
     private val topic: String = "refined-article"
-
+) {
     fun send(article: Article) {
 
         val articleAsString = objectMapper.writeValueAsString(article)
