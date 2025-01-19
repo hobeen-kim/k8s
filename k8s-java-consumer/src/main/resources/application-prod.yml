@@ -5,6 +5,18 @@ spring:
     consumer:
       bootstrap-servers: host.docker.internal:29092
       group-id: group_prod
+    producer:
+      bootstrap-servers: host.docker.internal:29092
   data:
     mongodb:
       uri: mongodb://admin:password123@host.docker.internal:31200/k8s?authSource=admin
+
+custom:
+  data:
+    mongodb:
+      collection: article
+  kafka:
+    consumer:
+      topic: raw-article
+    producer:
+      topic: refined-article

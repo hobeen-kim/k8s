@@ -5,7 +5,19 @@ spring:
     consumer:
       bootstrap-servers: localhost:9092
       group-id: group_1
+    producer:
+      bootstrap-servers: localhost:9092
   data:
     mongodb:
       uri: mongodb://admin:password123@localhost:31200/k8s?authSource=admin
+
+custom:
+  data:
+    mongodb:
+      collection: article-dev
+  kafka:
+    consumer:
+      topic: raw-article-dev
+    producer:
+      topic: refined-article-dev
 

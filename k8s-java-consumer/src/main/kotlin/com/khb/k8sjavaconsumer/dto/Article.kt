@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 
 val mapper = jacksonObjectMapper()
 
-@Document(collection = "article")
+@Document(collection = "\${custom.data.mongodb.collection}")
 data class Article (
     @Id
     val articleId: String,

@@ -1,6 +1,7 @@
 package com.khb.k8sjavaconsumer.consumer
 
 import com.khb.k8sjavaconsumer.dto.Article
+import com.khb.k8sjavaconsumer.producer.RefinedArticleProducer
 import com.khb.k8sjavaconsumer.repository.ArticleRepository
 import com.mongodb.DuplicateKeyException
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -11,12 +12,13 @@ import org.springframework.stereotype.Component
 @Component
 class ArticleConsumer(
     private val articleRepository: ArticleRepository,
+    private val articleProducer: RefinedArticleProducer
 ) {
 
     private val logger = LoggerFactory.getLogger(ArticleConsumer::class.java)
 
     @KafkaListener(
-        topics = ["raw-article"],
+        topics = ["\${custom.kafka.consumer.topic}"],
         concurrency = "3"
     )
     fun listener(data: ConsumerRecord<String, String>) {
@@ -29,6 +31,9 @@ class ArticleConsumer(
             }
 
             articleRepository.save(article)
+
+            articleProducer.send(article)
+
         } catch (e: DuplicateKeyException) {
             logger.error("Duplicated article: ${data.value()}")
         } catch (e: Exception) {
