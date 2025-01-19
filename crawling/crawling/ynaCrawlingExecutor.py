@@ -20,7 +20,7 @@ async def produce_yna_news_data():
         tasks = []
 
         for section_key, section_value in sections.items():
-            for page in range(1, 3): # 2페이지까지만 가져옴
+            for page in range(1, 2): # 1페이지까지만 가져옴
                 tasks.append(get_news_list(session, f"https://www.yna.co.kr/{section_key}/all", page, section_value))
 
         # 모든 태스크가 완료될 때까지 대기
@@ -68,7 +68,7 @@ async def get_news_list(session: aiohttp.ClientSession, url: str, page: int, sec
                     news_url = 'https://www.yna.co.kr' + news_url
 
                 # 내용 추출 태스크 생성
-                task = extract_content(news_url, session)
+                task = extract_contentTags(news_url, session)
                 tasks.append({
                     'task': task,
                     'title': title,
@@ -84,25 +84,35 @@ async def get_news_list(session: aiohttp.ClientSession, url: str, page: int, sec
         articles = []
         for task_info, content in zip(tasks, contents):
             articles.append(
-                ArticleData(task_info['title'], task_info['url'], task_info['time'], task_info['section'], content)
+                ArticleData(task_info['title'], task_info['url'], task_info['time'], task_info['section'], content[0], content[1])
             )
 
         return articles
 
 
-# 뉴스 기사 제목 및 내용 추출
-async def extract_content(url: str, session: aiohttp.ClientSession):
+# 뉴스 기사 내용 & 태그 추출
+async def extract_contentTags(url: str, session: aiohttp.ClientSession):
     try:
         async with session.get(url) as response:
             if response.status != 200:
                 return "내용을 가져올 수 없습니다."
 
+            # 기사 내용 추출
             html = await response.text()
             article = Article(url, language='ko')
             article.download_state = 2  # Skip download
             article.html = html
             article.parse()
-            return article.text
+
+            # 태그 추출
+            soup = BeautifulSoup(html, 'html.parser')
+            tags = []
+            keyword_zone = soup.select_one('.keyword-zone')
+            if keyword_zone:
+                tag_elements = keyword_zone.select('.list-text01.style03 li a')
+                tags = [tag.text.strip('#') for tag in tag_elements]
+
+            return article.text, tags
     except Exception as e:
         print(f"Error extracting content from {url}: {str(e)}")
         return "내용을 가져올 수 없습니다."

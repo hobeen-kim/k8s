@@ -4,13 +4,15 @@ class ArticleData:
     time = ''
     section = ''
     content = ''
+    tags = []
 
-    def __init__(self, title, url, time, section, content):
+    def __init__(self, title, url, time, section, content, tags):
         self.title = title
         self.url = url
         self.time = time
         self.section = section
         self.content = content
+        self.tags = tags
 
     def json(self):
         return {
@@ -18,5 +20,6 @@ class ArticleData:
             'url': self.url,
             'time': self.time,
             'section': self.section,
-            'content': self.content
+            'content': self.content,
+            'tags': self.tags
         }
