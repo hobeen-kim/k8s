@@ -1,12 +1,10 @@
 package com.khb.k8sjavaconsumer.consumer
 
 import com.fasterxml.jackson.module.kotlin.jsonMapper
-import com.khb.k8sjavaconsumer.cache.CacheService
 import com.khb.k8sjavaconsumer.dto.Article
 import com.khb.k8sjavaconsumer.repository.ArticleRepository
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.anyString
 import org.mockito.BDDMockito.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -43,14 +41,11 @@ class ArticleConsumerTest {
     //verify를 위해 mock 객체로 만들어줌 나중에 deperecated 되면 바꾸자 ㅎ
     @MockBean
     lateinit var articleRepository: ArticleRepository
-    @MockBean
-    lateinit var cacheService: CacheService
 
     @Test
     @DisplayName("Kafka Listener 테스트 - ArticleConsumer")
     fun listenerTest() {
         //given
-        given(cacheService.hasKey(anyString())).willReturn(false)
         given(articleRepository.save(any())).willReturn(Article(
             articleId = "AKR20250119018300004",
             title = "title",

@@ -1,19 +1,19 @@
 package com.khb.k8sjavaconsumer.consumer
 
-import com.khb.k8sjavaconsumer.cache.CacheService
 import com.khb.k8sjavaconsumer.dto.Article
 import com.khb.k8sjavaconsumer.repository.ArticleRepository
+import com.mongodb.DuplicateKeyException
 import org.apache.kafka.clients.consumer.ConsumerRecord
+import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
-import java.time.LocalDateTime
 
 @Component
 class ArticleConsumer(
     private val articleRepository: ArticleRepository,
-    private val cacheService: CacheService
-
 ) {
+
+    final val logger = LoggerFactory.getLogger(ArticleConsumer::class.java)
 
     @KafkaListener(
         topics = ["raw-article"],
@@ -24,16 +24,16 @@ class ArticleConsumer(
         try {
             val article = Article.fromString(data.value()) ?: return //TODO: DLQ 처리
 
-            if(cacheService.hasKey(article.articleId)) {
+            if(articleRepository.existsById(article.articleId)) {
                 return
             }
 
-            cacheService.set(article.articleId, LocalDateTime.now())
             articleRepository.save(article)
-
-            println("Received: ${data.value()}")
+            logger.info("Save article: $article")
+        } catch (e: DuplicateKeyException) {
+            logger.error("Duplicated article: ${data.value()}")
         } catch (e: Exception) {
-            e.printStackTrace()
+            logger.error("Error: ${e.message}")
             //TODO: DLQ 처리
         }
     }
