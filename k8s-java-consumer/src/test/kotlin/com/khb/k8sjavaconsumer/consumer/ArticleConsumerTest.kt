@@ -4,16 +4,17 @@ import com.fasterxml.jackson.module.kotlin.jsonMapper
 import com.khb.k8sjavaconsumer.cache.CacheService
 import com.khb.k8sjavaconsumer.dto.Article
 import com.khb.k8sjavaconsumer.repository.ArticleRepository
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.BDDMockito.*
-import org.mockito.Mock
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.kafka.test.context.EmbeddedKafka
 import org.springframework.test.context.ActiveProfiles
+import java.lang.Thread.sleep
 import java.time.LocalDateTime
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -22,19 +23,27 @@ import java.util.concurrent.TimeUnit
 @SpringBootTest
 //여기 localhost:19092 를 수정하면 application-test.yml 도 수정해야 함
 @EmbeddedKafka(partitions = 1,
-    brokerProperties = ["listeners=PLAINTEXT://localhost:19092"],
-    ports = [19092]
+    brokerProperties = [
+        "listeners=PLAINTEXT://localhost:19092",
+        "auto.create.topics.enable=true",
+        "offsets.topic.replication.factor=1",
+        "group.initial.rebalance.delay.ms=0"  // 리밸런싱 지연 제거
+   ],
+    ports = [19092],
+
 )
 @ActiveProfiles("test")
+@AutoConfigureMockMvc
 class ArticleConsumerTest {
 
     @Autowired
     lateinit var articleConsumer: ArticleConsumer
     @Autowired
     lateinit var mockProducer: MockProducer
-    @Mock
+    //verify를 위해 mock 객체로 만들어줌 나중에 deperecated 되면 바꾸자 ㅎ
+    @MockBean
     lateinit var articleRepository: ArticleRepository
-    @Mock
+    @MockBean
     lateinit var cacheService: CacheService
 
     @Test
@@ -72,10 +81,13 @@ class ArticleConsumerTest {
         val payload = jsonMapper().readTree(data)
 
         //when
+        //wait for initializing producer config
+        sleep(2000)
+
         mockProducer.send("raw-article", payload)
 
-        //wait
-        assertTrue(latch.await(100, TimeUnit.SECONDS))  // 10초 동안 대기
+        //wait for receiving message
+        latch.await(10, TimeUnit.SECONDS)  // 10초 동안 대기 (10초 안에 latch 가 0이 되면 10초 이전에 테스트 진행)
 
         //then
         verify(articleRepository, times(1)).save(any())

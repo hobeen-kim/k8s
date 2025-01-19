@@ -6,9 +6,10 @@ import com.khb.k8sjavaconsumer.repository.ArticleRepository
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime
 
 @Component
-class NewConsumer(
+class ArticleConsumer(
     private val articleRepository: ArticleRepository,
     private val cacheService: CacheService
 
@@ -16,7 +17,6 @@ class NewConsumer(
 
     @KafkaListener(
         topics = ["raw-article"],
-        groupId = "group_1",
         concurrency = "3"
     )
     fun listener(data: ConsumerRecord<String, String>) {
@@ -28,8 +28,10 @@ class NewConsumer(
                 return
             }
 
-            cacheService.set(article.articleId, article.articleId)
+            cacheService.set(article.articleId, LocalDateTime.now())
             articleRepository.save(article)
+
+            println("Received: ${data.value()}")
         } catch (e: Exception) {
             e.printStackTrace()
             //TODO: DLQ 처리

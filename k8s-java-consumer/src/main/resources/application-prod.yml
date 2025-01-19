@@ -3,9 +3,8 @@ spring:
     name: k8s-java-consumer
   kafka:
     consumer:
-      bootstrap-servers: localhost:19092
-      group-id: group_1
+      bootstrap-servers: host.docker.internal:19092
+      group-id: group_prod
   data:
     mongodb:
-      uri: mongodb://admin:password123@localhost:31200/k8s?authSource=admin
-
+      uri: mongodb://admin:password123@host.docker.internal:31200/k8s?authSource=admin

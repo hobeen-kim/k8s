@@ -1,4 +1,18 @@
 package com.khb.k8sjavaconsumer.consumer
 
-class MockProducer {
+import org.springframework.context.annotation.Profile
+import org.springframework.kafka.core.KafkaTemplate
+import org.springframework.stereotype.Component
+
+
+@Component
+@Profile("test")
+class MockProducer(
+    private val kafkaTemplate: KafkaTemplate<String, Any>
+) {
+
+    fun send(topic: String?, payload: Any) {
+        println("Send to $topic: $payload")
+        kafkaTemplate.send(topic!!, payload)
+    }
 }
