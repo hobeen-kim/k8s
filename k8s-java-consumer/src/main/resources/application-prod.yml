@@ -20,3 +20,5 @@ custom:
       topic: raw-article
     producer:
       topic: refined-article
+    dlq:
+      topic: raw-article-dlq

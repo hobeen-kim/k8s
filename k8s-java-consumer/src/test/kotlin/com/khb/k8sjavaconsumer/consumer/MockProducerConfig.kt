@@ -29,7 +29,7 @@ class MockProducerConfig {
         return DefaultKafkaProducerFactory(props)
     }
 
-    @Bean
+    @Bean("kafkaTestTemplate")
     fun kafkaTemplate(): KafkaTemplate<String, Any> {
         return KafkaTemplate(factory())
     }

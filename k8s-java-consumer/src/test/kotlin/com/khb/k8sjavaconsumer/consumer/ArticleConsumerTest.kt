@@ -2,6 +2,8 @@ package com.khb.k8sjavaconsumer.consumer
 
 import com.fasterxml.jackson.module.kotlin.jsonMapper
 import com.khb.k8sjavaconsumer.dto.Article
+import com.khb.k8sjavaconsumer.producer.DeadLetterQueue
+import com.khb.k8sjavaconsumer.producer.RefinedArticleProducer
 import com.khb.k8sjavaconsumer.repository.ArticleRepository
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -41,6 +43,10 @@ class ArticleConsumerTest {
     //verify를 위해 mock 객체로 만들어줌 나중에 deperecated 되면 바꾸자 ㅎ
     @MockBean
     lateinit var articleRepository: ArticleRepository
+    @MockBean
+    lateinit var refinedArticleProducer: RefinedArticleProducer
+    @MockBean
+    lateinit var deadLetterQueue: DeadLetterQueue
 
     @Test
     @DisplayName("Kafka Listener 테스트 - ArticleConsumer")
@@ -79,7 +85,7 @@ class ArticleConsumerTest {
         //wait for initializing producer config
         sleep(2000)
 
-        mockProducer.send("raw-article", payload)
+        mockProducer.send("raw-article-dev", payload)
 
         //wait for receiving message
         latch.await(10, TimeUnit.SECONDS)  // 10초 동안 대기 (10초 안에 latch 가 0이 되면 10초 이전에 테스트 진행)

@@ -1,8 +1,12 @@
 package com.khb.k8sjavaconsumer.consumer
 
 import com.khb.k8sjavaconsumer.dto.Article
+import com.khb.k8sjavaconsumer.producer.DeadLetterQueue
 import com.khb.k8sjavaconsumer.producer.RefinedArticleProducer
 import com.khb.k8sjavaconsumer.repository.ArticleRepository
+import com.khb.k8sjavaconsumer.service.gpt.GptService
+import com.khb.k8sjavaconsumer.utils.exception.BusinessException
+import com.khb.k8sjavaconsumer.utils.exception.InvalidDataException
 import com.mongodb.DuplicateKeyException
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.LoggerFactory
@@ -12,7 +16,9 @@ import org.springframework.stereotype.Component
 @Component
 class ArticleConsumer(
     private val articleRepository: ArticleRepository,
-    private val articleProducer: RefinedArticleProducer
+    private val articleProducer: RefinedArticleProducer,
+    private val dlQueue: DeadLetterQueue,
+    private val gptService: GptService
 ) {
 
     private val logger = LoggerFactory.getLogger(ArticleConsumer::class.java)
@@ -24,21 +30,54 @@ class ArticleConsumer(
     fun listener(data: ConsumerRecord<String, String>) {
 
         try {
-            val article = Article.fromString(data.value()) ?: return //TODO: DLQ 처리
+            val article = getArticleFrom(data.value())
 
-            if(articleRepository.existsById(article.articleId)) {
+            if(article.exists()) {
                 return
             }
 
-            articleRepository.save(article)
+            article.addGptSummary()
+
+            article.save()
 
             articleProducer.send(article)
 
+        } catch (e: BusinessException) {
+            logger.error("Business error: ${e.message}")
         } catch (e: DuplicateKeyException) {
             logger.error("Duplicated article: ${data.value()}")
         } catch (e: Exception) {
             logger.error("Error: ${e.message}")
-            //TODO: DLQ 처리
+            dlQueue.send(data.value())
         }
+    }
+
+    private fun getArticleFrom(data: String): Article {
+        val article = Article.fromString(data)
+
+        if(article == null) {
+            dlQueue.send(data)
+            throw InvalidDataException("Invalid data: $data")
+        }
+
+        return article
+    }
+
+    private fun Article.exists(): Boolean {
+        return articleRepository.existsById(this.articleId)
+    }
+
+    private fun Article.addGptSummary() {
+        val gptResponse = gptService.summarizeArticle(this.content)
+
+        this.updateGptSummary(
+            gptResponse.summary,
+            gptResponse.tags
+        )
+
+    }
+
+    private fun Article.save() {
+        articleRepository.save(this)
     }
 }

@@ -20,4 +20,6 @@ custom:
       topic: raw-article-dev
     producer:
       topic: refined-article-dev
+    dlq:
+      topic: raw-article-dlq-dev
 

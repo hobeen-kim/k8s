@@ -1,4 +1,4 @@
-package com.khb.k8sjavaconsumer.service
+package com.khb.k8sjavaconsumer.service.expirer
 
 import com.khb.k8sjavaconsumer.repository.ArticleRepository
 import org.springframework.scheduling.annotation.Scheduled

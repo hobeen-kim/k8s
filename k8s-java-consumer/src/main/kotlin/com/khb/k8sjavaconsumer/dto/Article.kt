@@ -17,6 +17,8 @@ data class Article (
     val time: LocalDateTime,
     val section: String,
     val content: String,
+    var summary: String? = null,
+    var tags: List<String>? = null
 ) {
 
     companion object {
@@ -38,8 +40,14 @@ data class Article (
 
             val articleId = getArticleIdFrom(url)
 
-            return Article(articleId, title, url, time, section, content)
-
+            return of(
+                articleId = articleId,
+                title = title,
+                url = url,
+                time = time,
+                section = section,
+                content = content
+            )
         }
 
         private fun getArticleIdFrom(title: String): String {
@@ -63,5 +71,17 @@ data class Article (
 
             return LocalDateTime.of(year, month, day, hour, minute)
         }
+
+        private fun of(articleId: String, title: String, url: String, time: LocalDateTime, section: String, content: String): Article {
+            return Article(articleId, title, url, time, section, content)
+        }
+    }
+
+    fun updateGptSummary(
+        summary: String,
+        tags: List<String>
+    ) {
+        this.summary = summary
+        this.tags = tags
     }
 }
