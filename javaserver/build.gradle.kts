@@ -33,6 +33,11 @@ dependencies {
 
     //websocket
     implementation("org.springframework.boot:spring-boot-starter-websocket")
+    
+    //kafka
+    implementation("org.apache.kafka:kafka-streams")
+    implementation("org.springframework.kafka:spring-kafka")
+    testImplementation("org.springframework.kafka:spring-kafka-test")
 }
 
 kotlin {

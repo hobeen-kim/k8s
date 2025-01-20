@@ -1,6 +1,10 @@
 spring:
   application:
     name: javaserver
+  kafka:
+    streams:
+      bootstrap-servers: localhost:9092
+      application-id: web-stream-dev
   h2:
     console:
       enabled: true
