@@ -5,6 +5,7 @@ spring:
     streams:
       bootstrap-servers: localhost:9092
       application-id: web-stream-dev
+      topic-name: refined-article-dev
   h2:
     console:
       enabled: true
