@@ -48,6 +48,10 @@ class KafkaStreamConfig {
 
         val topology = streamsBuilder.build()
 
-        return KafkaStreams(topology, prop)
+        val kafkaStreams = KafkaStreams(topology, prop)
+
+        kafkaStreams.start()
+
+        return kafkaStreams
     }
 }
