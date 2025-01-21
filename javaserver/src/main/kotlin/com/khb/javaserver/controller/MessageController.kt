@@ -14,7 +14,6 @@ class MessageController {
 
     private val log = LoggerFactory.getLogger(MessageController::class.java)
 
-    @MessageMapping("/chat.{chatRoomId}")
     @SendTo("/subscribe/chat.{chatRoomId}")
     fun sendMessage(
         request: ChatMessageRequest,
