@@ -19,6 +19,6 @@ custom:
     consumer:
       topic: raw-article
     producer:
-      topic: refined-article
+      topic: refine-article
     dlq:
       topic: raw-article-dlq

@@ -12,6 +12,16 @@ from producer.producer import send_data
 sections = {
     "politics": "정치",
     "north-korea": "북한",
+    "economy": "경제",
+    "market-plus": "마켓+",
+    "industry": "산업",
+    "society": "사회",
+    "local": "전국",
+    "international": "세계",
+    "culture": "문화",
+    "health": "건강",
+    "entertainment": "연예",
+    "sports": "스포츠",
 }
 
 async def produce_yna_news_data():

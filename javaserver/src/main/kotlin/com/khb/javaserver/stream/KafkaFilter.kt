@@ -88,4 +88,7 @@ private fun buildWindowPersistentStore(): Materialized<String, MutableList<Artic
     return Materialized.`as`<String, MutableList<Article>, WindowStore<Bytes, ByteArray>>(WindowStore::class.java.name)
         .withKeySerde(Serdes.String())
         .withValueSerde(ArticleListSerde())
+        .withRetention(Duration.ofMinutes(10))  // 10분 보존
+
+
 }

@@ -1,4 +1,4 @@
-package com.khb.k8sjavaconsumer.producer.config
+package com.khb.k8sjavaconsumer.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule

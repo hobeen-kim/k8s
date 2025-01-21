@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: crawling
 spec:
-  schedule: "0 * * * *"
+  schedule: "0/5 * * * *"
   jobTemplate:
     spec:
       ttlSecondsAfterFinished: 100

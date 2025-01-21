@@ -34,7 +34,6 @@ data class Article (
             val tags = values["tags"] as List<String>?
 
             if(title.isNullOrBlank() || url.isNullOrBlank() || time == null || section.isNullOrBlank() || content.isNullOrBlank()) {
-                println("Invalid data's title: $title")
                 return null
             }
 

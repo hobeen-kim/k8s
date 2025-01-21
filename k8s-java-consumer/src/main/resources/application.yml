@@ -19,7 +19,7 @@ custom:
     consumer:
       topic: raw-article-dev
     producer:
-      topic: refined-article-dev
+      topic: refine-article-dev
     dlq:
       topic: raw-article-dlq-dev
 

@@ -20,6 +20,6 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "prod"
-          image: sksjsksh32/k8s-java-consumer:2438a8dede505a675fb6558b2461fc313423930d
+          image: sksjsksh32/k8s-java-consumer:a5477546889778665bc36100f6cb9247b8d1511a
           imagePullPolicy: IfNotPresent
       restartPolicy: Always
