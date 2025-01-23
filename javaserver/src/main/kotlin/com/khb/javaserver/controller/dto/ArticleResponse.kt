@@ -1,4 +1,4 @@
-package com.khb.javaserver.service.dto
+package com.khb.javaserver.controller.dto
 
 import com.khb.javaserver.entity.Article
 import java.time.LocalDateTime

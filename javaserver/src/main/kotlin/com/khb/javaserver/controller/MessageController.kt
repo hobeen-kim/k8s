@@ -1,7 +1,7 @@
 package com.khb.javaserver.controller
 
-import com.khb.javaserver.controller.dto.ChatMessageRequest
-import com.khb.javaserver.controller.dto.ChatMessageResponse
+import com.khb.javaserver.controller.dto.StreamResponse
+import com.khb.javaserver.entity.Article
 import org.slf4j.LoggerFactory
 import org.springframework.messaging.handler.annotation.DestinationVariable
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler
@@ -14,20 +14,14 @@ class MessageController {
 
     private val log = LoggerFactory.getLogger(MessageController::class.java)
 
+    @MessageMapping("/chat.{chatRoomId}")
     @SendTo("/subscribe/chat.{chatRoomId}")
     fun sendMessage(
-        request: ChatMessageRequest,
+        articles: List<Article>,
         @DestinationVariable chatRoomId: Long
-    ): ChatMessageResponse {
+    ): StreamResponse {
 
-        if(request.username == "error") {
-            throw RuntimeException("username is error")
-        }
-
-        return ChatMessageResponse(
-            username = request.username,
-            content = request.content
-        )
+        return StreamResponse.of(articles)
     }
 
     @MessageExceptionHandler

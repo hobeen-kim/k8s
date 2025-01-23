@@ -1,6 +1,6 @@
-package com.khb.javaserver.config
+package com.khb.articlerealtimepublishserver.config
 
-import com.khb.javaserver.service.StreamArticleService
+import com.khb.articlerealtimepublishserver.service.StreamArticleService
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.StreamsBuilder
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.annotation.EnableKafka
 import java.util.*
-import com.khb.javaserver.stream.setHandler
+import com.khb.articlerealtimepublishserver.stream.setHandler
 import org.springframework.beans.factory.annotation.Autowired
 
 @Configuration
