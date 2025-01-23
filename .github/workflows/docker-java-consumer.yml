@@ -4,11 +4,11 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - 'k8s-java-consumer/**'
+      - '../../article-refine-server/**'
   pull_request:
     branches: [ "main" ]
     paths:
-      - 'k8s-java-consumer/**'
+      - '../../article-refine-server/**'
 
 jobs:
   build:
