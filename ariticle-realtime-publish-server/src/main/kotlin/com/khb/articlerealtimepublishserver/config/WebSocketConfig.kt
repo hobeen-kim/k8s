@@ -1,12 +1,14 @@
 package com.khb.articlerealtimepublishserver.config
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.messaging.converter.MappingJackson2MessageConverter
 import org.springframework.web.socket.client.standard.StandardWebSocketClient
 import org.springframework.web.socket.messaging.WebSocketStompClient
-import java.net.http.HttpClient
-import java.time.Duration
 
 @Configuration
 class WebSocketConfig {
@@ -14,7 +16,11 @@ class WebSocketConfig {
     @Bean
     fun stompClient(): WebSocketStompClient {
         val stompClient = WebSocketStompClient(StandardWebSocketClient())
-        stompClient.messageConverter = MappingJackson2MessageConverter()
+
+        val messageConverter = MappingJackson2MessageConverter().apply {
+            objectMapper.registerModule(JavaTimeModule())
+        }
+        stompClient.messageConverter = messageConverter
 
         return stompClient
     }
