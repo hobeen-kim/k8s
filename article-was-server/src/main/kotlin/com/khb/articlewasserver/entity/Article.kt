@@ -1,4 +1,4 @@
-package com.khb.javaserver.entity
+package com.khb.articlewasserver.entity
 
 import java.time.LocalDateTime
 

@@ -1,4 +1,4 @@
-package com.khb.javaserver
+package com.khb.articlewasserver
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

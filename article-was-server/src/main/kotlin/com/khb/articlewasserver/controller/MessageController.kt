@@ -1,7 +1,7 @@
-package com.khb.javaserver.controller
+package com.khb.articlewasserver.controller
 
-import com.khb.javaserver.controller.dto.StreamResponse
-import com.khb.javaserver.entity.Article
+import com.khb.articlewasserver.controller.dto.StreamResponse
+import com.khb.articlewasserver.entity.Article
 import org.slf4j.LoggerFactory
 import org.springframework.messaging.handler.annotation.DestinationVariable
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler

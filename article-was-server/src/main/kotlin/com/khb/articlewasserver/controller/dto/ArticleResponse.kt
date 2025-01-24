@@ -1,6 +1,6 @@
-package com.khb.javaserver.controller.dto
+package com.khb.articlewasserver.controller.dto
 
-import com.khb.javaserver.entity.Article
+import com.khb.articlewasserver.entity.Article
 import java.time.LocalDateTime
 
 data class ArticleResponse (

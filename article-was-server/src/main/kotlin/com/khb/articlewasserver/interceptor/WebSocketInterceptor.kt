@@ -1,4 +1,4 @@
-package com.khb.javaserver.interceptor
+package com.khb.articlewasserver.interceptor
 
 import org.slf4j.LoggerFactory
 import org.springframework.messaging.Message

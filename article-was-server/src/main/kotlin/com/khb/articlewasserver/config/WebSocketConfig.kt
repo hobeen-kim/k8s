@@ -1,7 +1,6 @@
-package com.khb.javaserver.config
+package com.khb.articlewasserver.config
 
-import com.khb.javaserver.interceptor.WebSocketInterceptor
-import org.springframework.beans.factory.annotation.Autowired
+import com.khb.articlewasserver.interceptor.WebSocketInterceptor
 import org.springframework.context.annotation.Configuration
 import org.springframework.messaging.simp.config.ChannelRegistration
 import org.springframework.messaging.simp.config.MessageBrokerRegistry

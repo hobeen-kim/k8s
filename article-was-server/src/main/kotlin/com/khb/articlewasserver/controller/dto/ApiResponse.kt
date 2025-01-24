@@ -1,4 +1,4 @@
-package com.khb.javaserver.controller.dto
+package com.khb.articlewasserver.controller.dto
 
 data class ApiResponse<T> (
     val status: Int,
