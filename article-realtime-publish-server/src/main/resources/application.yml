@@ -7,5 +7,10 @@ spring:
       application-id: web-stomp-dev
       topic-name: refine-article-dev
 
+custom:
+  stomp:
+    url: localhost
+    port: 8080
+
 server:
   port: 8081

@@ -1,8 +1,11 @@
 package com.khb.articlerealtimepublishserver.service
 
 import com.khb.articlerealtimepublishserver.entity.Article
+import jakarta.annotation.PostConstruct
 import jakarta.annotation.PreDestroy
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.core.env.Environment
 import org.springframework.messaging.simp.stomp.StompHeaders
 import org.springframework.messaging.simp.stomp.StompSession
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter
@@ -14,6 +17,12 @@ import java.util.concurrent.atomic.AtomicLong
 @Service
 class StompStreamArticleService(
     private val stompClient: WebSocketStompClient,
+    private val environment: Environment,
+
+    @Value("\${custom.stomp.url}")
+    private val stompUrl: String,
+    @Value("\${custom.stomp.port}")
+    private val stompPort: Int
 ): StreamArticleService {
 
     private lateinit var stompSession: StompSession
@@ -22,9 +31,11 @@ class StompStreamArticleService(
 
     private val reconnectCount = AtomicLong(3)
 
-    init {
-        // 초기 연결 설정
-        initializeConnection()
+    @PostConstruct
+    fun initialize() {
+        if (environment.activeProfiles.contains("prod") || environment.activeProfiles.contains("local")) {
+            initializeConnection()
+        }
     }
 
     override fun streamToRealTimeSubscribers(articles: List<Article>) {
@@ -41,7 +52,7 @@ class StompStreamArticleService(
 
     private fun initializeConnection() {
         stompSession = stompClient.connectAsync(
-            "ws://localhost:8080/ws-connect",
+            "ws://$stompUrl:$stompPort/ws-connect",
             object : StompSessionHandlerAdapter() {
                 override fun handleTransportError(session: StompSession, exception: Throwable) {
                     // 연결 에러 처리
