@@ -11,8 +11,4 @@ data class Article (
     val content: String,
     var tags: List<String>,
     var summary: String,
-) {
-    fun groupBy(): String {
-        return "all"
-    }
-}
+)
