@@ -7,7 +7,7 @@ from entity.articleData import ArticleData
 from dotenv import load_dotenv
 
 profile = os.getenv("PROFILE", "dev")
-load_dotenv(dotenv_path=f"crawling/.env.{profile}")
+load_dotenv(dotenv_path=f"articlecrawlingserver/.env.{profile}")
 
 class MessageProducer:
     broker = ""

@@ -11,10 +11,10 @@ COPY ./requirements.txt /code/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
 # 폴더(코드) 복사
-COPY ./crawling /code/crawling
+COPY articlecrawlingserver /code/articlecrawlingserver
 
 # 실행 권한 부여
-RUN chmod +x /code/crawling/ynaCrawlingExecutor.py
+RUN chmod +x /code/articlecrawlingserver/ynaCrawlingExecutor.py
 
-# /code/crawling/ynaCrawlingExecutor.py 실행
-ENTRYPOINT ["/usr/local/bin/python", "/code/crawling/ynaCrawlingExecutor.py"]
+# /code/articlecrawlingserver/ynaCrawlingExecutor.py 실행
+ENTRYPOINT ["/usr/local/bin/python", "/code/articlecrawlingserver/ynaCrawlingExecutor.py"]
