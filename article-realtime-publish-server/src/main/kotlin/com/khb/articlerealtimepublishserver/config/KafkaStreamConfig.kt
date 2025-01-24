@@ -16,16 +16,16 @@ import org.springframework.beans.factory.annotation.Autowired
 
 @Configuration
 @EnableKafka
-class KafkaStreamConfig {
+class KafkaStreamConfig(
+    @Value("\${spring.kafka.streams.bootstrap-servers}")
+    private val bootstrapServers: String,
+    @Value("\${spring.kafka.streams.application-id}")
+    private val applicationId: String,
+    @Value("\${spring.kafka.streams.topic-name}")
+    private val topicName: String,
+) {
 
     @Autowired lateinit var streamArticleService: StreamArticleService
-
-    @Value("\${spring.kafka.streams.bootstrap-servers}")
-    private val bootstrapServers: String = "localhost:9092"
-    @Value("\${spring.kafka.streams.application-id}")
-    private val applicationId: String = "web-stomp-dev"
-    @Value("\${spring.kafka.streams.topic-name}")
-    private val topicName: String = "refine-article-dev"
 
     private val props = mapOf(
         StreamsConfig.BOOTSTRAP_SERVERS_CONFIG to bootstrapServers,
