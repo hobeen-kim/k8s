@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: java-app
+  name: article-was-server
   labels:
-    app: java-app
+    app: article-was-server
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: java-app
+      app: article-was-server
   template:
     metadata:
-      name: java-app
+      name: article-was-server
       labels:
-        app: java-app
+        app: article-was-server
     spec:
       containers:
-        - name: java-app
+        - name: article-was-server
           env:
             - name: NODE_NAME
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
-          image: sksjsksh32/k8s-javaserver:e5b171c08bd3cf581f1a43bc2793cf0ce204db2b
+          image: sksjsksh32/article-was-server:e5b171c08bd3cf581f1a43bc2793cf0ce204db2b
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -32,13 +32,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: java-app
+  name: article-was-server
 spec:
   ports:
-    - name: java-app-svc
+    - name: article-was-svc
       port: 8080
       targetPort: 8080
       nodePort: 31100
   selector:
-    app: java-app
+    app: article-was-server
   type: NodePort

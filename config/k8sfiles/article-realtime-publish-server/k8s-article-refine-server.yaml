@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: article-realtime-publish-server
+  labels:
+    app: article-realtime-publish-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: article-realtime-publish-server
+  template:
+    metadata:
+      name: article-realtime-publish-server
+      labels:
+        app: article-realtime-publish-server
+    spec:
+      containers:
+        - name: article-realtime-publish-server
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+          image: sksjsksh32/article-realtime-publish-server:e5b171c08bd3cf581f1a43bc2793cf0ce204db2b
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always

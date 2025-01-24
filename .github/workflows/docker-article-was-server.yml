@@ -1,14 +1,14 @@
-name: Docker Image CI - java-consumer
+name: Docker Image CI - article-was-server
 
 on:
   push:
     branches: [ "main" ]
     paths:
-      - '../../article-refine-server/**'
+      - '../../article-was-server/**'
   pull_request:
     branches: [ "main" ]
     paths:
-      - '../../article-refine-server/**'
+      - '../../article-was-server/**'
 
 jobs:
   build:
@@ -31,8 +31,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: ./k8s-java-consumer
+          context: ./article-was-server
           push: true
           tags: |
-            ${{ secrets.DOCKER_HUB_USERNAME }}/k8s-java-consumer:latest
-            ${{ secrets.DOCKER_HUB_USERNAME }}/k8s-java-consumer:${{ env.TAG }}
+            ${{ secrets.DOCKER_HUB_USERNAME }}/article-was-server:latest
+            ${{ secrets.DOCKER_HUB_USERNAME }}/article-was-server:${{ env.TAG }}

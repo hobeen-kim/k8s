@@ -1,14 +1,14 @@
-name: Docker Image CI - crawling
+name: Docker Image CI - article-refine-server
 
 on:
   push:
     branches: [ "main" ]
     paths:
-      - '../../article-crawling-server/**'
+      - '../../article-refine-server/**'
   pull_request:
     branches: [ "main" ]
     paths:
-      - '../../article-crawling-server/**'
+      - '../../article-refine-server/**'
 
 jobs:
   build:
@@ -31,8 +31,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: ./crawling
+          context: ./article-refine-server
           push: true
           tags: |
-            ${{ secrets.DOCKER_HUB_USERNAME }}/k8s-crawling:latest
-            ${{ secrets.DOCKER_HUB_USERNAME }}/k8s-crawling:${{ env.TAG }}
+            ${{ secrets.DOCKER_HUB_USERNAME }}/article-refine-server:latest
+            ${{ secrets.DOCKER_HUB_USERNAME }}/article-refine-server:${{ env.TAG }}

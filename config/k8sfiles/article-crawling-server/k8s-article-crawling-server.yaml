@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: crawling
+  name: article-crawling-server
 spec:
   schedule: "0/5 * * * *"
   jobTemplate:
@@ -14,6 +14,6 @@ spec:
               env:
                 - name: PROFILE
                   value: "prod"
-              image: sksjsksh32/k8s-crawling:e5b171c08bd3cf581f1a43bc2793cf0ce204db2b
+              image: sksjsksh32/article-crawling-server:e5b171c08bd3cf581f1a43bc2793cf0ce204db2b
               imagePullPolicy: IfNotPresent
           restartPolicy: OnFailure

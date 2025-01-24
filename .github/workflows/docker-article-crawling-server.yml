@@ -1,14 +1,14 @@
-name: Docker Image CI - javaserver
+name: Docker Image CI - crawling
 
 on:
   push:
     branches: [ "main" ]
     paths:
-      - 'javaserver/**'
+      - '../../article-crawling-server/**'
   pull_request:
     branches: [ "main" ]
     paths:
-      - 'javaserver/**'
+      - '../../article-crawling-server/**'
 
 jobs:
   build:
@@ -31,8 +31,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: ./javaserver
+          context: ./crawling
           push: true
           tags: |
-            ${{ secrets.DOCKER_HUB_USERNAME }}/k8s-javaserver:latest
-            ${{ secrets.DOCKER_HUB_USERNAME }}/k8s-javaserver:${{ env.TAG }}
+            ${{ secrets.DOCKER_HUB_USERNAME }}/article-crawling-server:latest
+            ${{ secrets.DOCKER_HUB_USERNAME }}/article-crawling-server:${{ env.TAG }}

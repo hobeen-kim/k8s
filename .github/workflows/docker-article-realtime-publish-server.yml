@@ -34,5 +34,5 @@ jobs:
           context: ./article-realtime-publish-server
           push: true
           tags: |
-            ${{ secrets.DOCKER_HUB_USERNAME }}/k8s-javaserver:latest
-            ${{ secrets.DOCKER_HUB_USERNAME }}/k8s-javaserver:${{ env.TAG }}
+            ${{ secrets.DOCKER_HUB_USERNAME }}/article-realtime-publish-server:latest
+            ${{ secrets.DOCKER_HUB_USERNAME }}/article-realtime-publish-server:${{ env.TAG }}

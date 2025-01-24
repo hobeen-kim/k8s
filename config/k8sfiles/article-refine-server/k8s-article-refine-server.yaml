@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: java-consumer
+  name: article-refine-server
   labels:
-    app: java-consumer
+    app: article-refine-server
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: java-consumer
+      app: article-refine-server
   template:
     metadata:
-      name: java-consumer
+      name: article-refine-server
       labels:
-        app: java-consumer
+        app: article-refine-server
     spec:
       containers:
-        - name: java-consumer
+        - name: article-refine-server
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "prod"
-          image: sksjsksh32/k8s-java-consumer:e5b171c08bd3cf581f1a43bc2793cf0ce204db2b
+          image: sksjsksh32/article-refine-server:e5b171c08bd3cf581f1a43bc2793cf0ce204db2b
           imagePullPolicy: IfNotPresent
       restartPolicy: Always

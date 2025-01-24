@@ -9,7 +9,7 @@ spring:
 
 custom:
   stomp:
-    url: java-app
+    url: article-was-server
     port: 8080
 
 server:
