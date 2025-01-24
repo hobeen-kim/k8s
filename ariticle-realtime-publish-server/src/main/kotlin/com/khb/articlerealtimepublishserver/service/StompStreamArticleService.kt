@@ -1,6 +1,5 @@
 package com.khb.articlerealtimepublishserver.service
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.khb.articlerealtimepublishserver.entity.Article
 import jakarta.annotation.PreDestroy
 import org.slf4j.LoggerFactory
