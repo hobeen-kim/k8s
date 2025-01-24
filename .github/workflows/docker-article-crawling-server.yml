@@ -31,7 +31,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: ./crawling
+          context: ./article-crawling-server
           push: true
           tags: |
             ${{ secrets.DOCKER_HUB_USERNAME }}/article-crawling-server:latest
