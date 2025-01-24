@@ -4,11 +4,11 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - '../../article-crawling-server/**'
+      - 'article-crawling-server/**'
   pull_request:
     branches: [ "main" ]
     paths:
-      - '../../article-crawling-server/**'
+      - 'article-crawling-server/**'
 
 jobs:
   build:
