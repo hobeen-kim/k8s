@@ -10,6 +10,10 @@ import org.springframework.messaging.simp.stomp.StompSession
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.messaging.WebSocketStompClient
+import java.net.URI
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -42,6 +46,17 @@ class StompSessionProviderImpl(
 
     @PostConstruct
     fun initialize() {
+        val newHttpClient = HttpClient.newHttpClient()
+
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create("http://$stompUrl:$stompPort/info"))
+            .build()
+
+        //response
+        val response = newHttpClient.send(request, HttpResponse.BodyHandlers.ofString())
+
+        logger.info("http response = ${response.body()}")
+
         if (environment.activeProfiles.contains("prod") || environment.activeProfiles.contains("local")) {
             initializeConnection()
         }
