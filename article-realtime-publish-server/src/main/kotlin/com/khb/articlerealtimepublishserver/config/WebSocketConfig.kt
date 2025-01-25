@@ -19,6 +19,8 @@ class WebSocketConfig {
             objectMapper.registerModule(JavaTimeModule())
         }
         stompClient.messageConverter = messageConverter
+        stompClient.defaultHeartbeat = longArrayOf(1_000L, 1_000L)
+
 
         return stompClient
     }

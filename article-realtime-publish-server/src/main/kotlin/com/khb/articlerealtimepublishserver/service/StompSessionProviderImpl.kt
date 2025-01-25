@@ -5,15 +5,9 @@ import jakarta.annotation.PreDestroy
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.env.Environment
-import org.springframework.messaging.simp.stomp.StompHeaders
 import org.springframework.messaging.simp.stomp.StompSession
-import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.messaging.WebSocketStompClient
-import java.net.URI
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -21,6 +15,8 @@ import java.util.concurrent.atomic.AtomicInteger
 class StompSessionProviderImpl(
     private val stompClient: WebSocketStompClient,
     private val environment: Environment,
+    private val customStompSessionHandler: CustomStompSessionHandler,
+    private val eventPublisher: StompEventPublisher,
 
     @Value("\${custom.stomp.url}")
     private val stompUrl: String,
@@ -29,18 +25,16 @@ class StompSessionProviderImpl(
 ): StompSessionProvider {
 
     private lateinit var stompSession: StompSession
-
-    private val logger = LoggerFactory.getLogger(StompSessionProviderImpl::class.java)
-
     private val initialReconnectCount = 3
     private val reconnectRemains = AtomicInteger(initialReconnectCount)
+
+    private val logger = LoggerFactory.getLogger(StompSessionProviderImpl::class.java)
 
     override fun getSession(): StompSession {
 
         if (!stompSession.isConnected) {
             initializeConnection()
         }
-
         return stompSession
     }
 
@@ -51,21 +45,19 @@ class StompSessionProviderImpl(
             return
         }
 
-        val newHttpClient = HttpClient.newHttpClient()
-
-        val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://$stompUrl:$stompPort/info"))
-            .build()
-
-        //response
-        val response = newHttpClient.send(request, HttpResponse.BodyHandlers.ofString())
-
-        logger.info("http response = ${response.body()}")
+        eventPublisher.subscribe { event ->
+            reconnect()
+        }
 
         initializeConnection()
     }
 
-    private fun invalidProfile() = !environment.activeProfiles.contains("prod") && !environment.activeProfiles.contains("local")
+    @PreDestroy
+    fun cleanup() {
+        if (stompSession.isConnected) {
+            stompSession.disconnect()
+        }
+    }
 
     private fun initializeConnection() {
 
@@ -73,18 +65,7 @@ class StompSessionProviderImpl(
 
         stompSession = stompClient.connectAsync(
             "ws://$stompUrl:$stompPort/ws-connect",
-            object : StompSessionHandlerAdapter() {
-                override fun handleTransportError(session: StompSession, exception: Throwable) {
-                    // 연결 에러 처리
-                    logger.error("Transport error: ${exception.message}")
-                    reconnect()
-                }
-
-                override fun afterConnected(session: StompSession, connectedHeaders: StompHeaders) {
-                    logger.info("Connected to the server")
-                    reconnectRemains.set(initialReconnectCount)
-                }
-            }
+            customStompSessionHandler
         ).get(5, TimeUnit.SECONDS)
     }
 
@@ -101,11 +82,5 @@ class StompSessionProviderImpl(
             logger.error("Reconnection failed: ${e.message}")
         }
     }
-
-    @PreDestroy
-    fun cleanup() {
-        if (stompSession.isConnected) {
-            stompSession.disconnect()
-        }
-    }
+    private fun invalidProfile() = !environment.activeProfiles.contains("prod") && !environment.activeProfiles.contains("local")
 }

@@ -25,14 +25,11 @@ class StompStreamArticleService(
 
     override fun streamToRealTimeSubscribers(articles: List<Article>) {
         try {
-
-            logger.info("Message prepared to send to subscribers, size: ${articles.size}")
-
             checkConnection()
 
-            stompSession.send("/publish/chat.1", articles)
+            val receipt = stompSession.send("/publish/chat.1", articles)
 
-            logger.info("Message sent to subscribers, size: ${articles.size}")
+            logger.info("receipt Id : ${receipt.receiptId}")
         } catch (e: Exception) {
             logger.error("Failed to send message: ${e.message}")
         }
@@ -43,9 +40,6 @@ class StompStreamArticleService(
         if (!::stompSession.isInitialized || !stompSession.isConnected) {
             logger.info("Connection is not established, try to connect")
             stompSession = stompSessionProvider.getSession()
-            logger.info("Connection is established")
-        } else {
-            logger.info("Connection is already established")
         }
     }
 }
