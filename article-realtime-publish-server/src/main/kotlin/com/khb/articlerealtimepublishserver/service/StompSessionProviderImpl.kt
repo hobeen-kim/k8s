@@ -62,9 +62,7 @@ class StompSessionProviderImpl(
 
         logger.info("http response = ${response.body()}")
 
-        if (environment.activeProfiles.contains("prod") || environment.activeProfiles.contains("local")) {
-            initializeConnection()
-        }
+        initializeConnection()
     }
 
     private fun invalidProfile() = !environment.activeProfiles.contains("prod") && !environment.activeProfiles.contains("local")
@@ -89,6 +87,7 @@ class StompSessionProviderImpl(
     private fun reconnect() {
         try {
             if(reconnectRemains.getAndDecrement() >= 0) {
+                logger.error("Reconnecting... remains: ${reconnectRemains.get()}")
                 initializeConnection()
             } else {
                 reconnectRemains.set(initialReconnectCount)
