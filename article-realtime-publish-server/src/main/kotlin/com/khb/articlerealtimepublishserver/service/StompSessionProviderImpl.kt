@@ -68,6 +68,9 @@ class StompSessionProviderImpl(
     private fun invalidProfile() = !environment.activeProfiles.contains("prod") && !environment.activeProfiles.contains("local")
 
     private fun initializeConnection() {
+
+        logger.info("initialize connection")
+
         stompSession = stompClient.connectAsync(
             "ws://$stompUrl:$stompPort/ws-connect",
             object : StompSessionHandlerAdapter() {
@@ -78,6 +81,7 @@ class StompSessionProviderImpl(
                 }
 
                 override fun afterConnected(session: StompSession, connectedHeaders: StompHeaders) {
+                    logger.info("Connected to the server")
                     reconnectRemains.set(initialReconnectCount)
                 }
             }

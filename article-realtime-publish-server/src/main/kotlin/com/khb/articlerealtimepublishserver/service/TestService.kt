@@ -6,8 +6,7 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 
-@Component()
-@Profile("local")
+@Component
 class TestService(
     private val streamArticleService: StreamArticleService
 ) {
