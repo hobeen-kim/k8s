@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 
 @Component
+@Profile("local")
 class TestService(
     private val streamArticleService: StreamArticleService
 ) {
