@@ -7,7 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.khb.articlerealtimepublishserver.entity.Article
-import com.khb.articlerealtimepublishserver.service.StreamArticleService
+import com.khb.articlerealtimepublishserver.connector.StreamConnector
 import org.apache.kafka.common.serialization.Deserializer
 import org.apache.kafka.common.serialization.Serde
 import org.apache.kafka.common.serialization.Serdes
@@ -24,7 +24,7 @@ val objectMapper: ObjectMapper = ObjectMapper()
     .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
 
 fun KStream<String, String>.setHandler(
-    streamArticleService: StreamArticleService
+    streamConnector: StreamConnector
 ) {
 
     this.map { _, value ->
@@ -49,7 +49,7 @@ fun KStream<String, String>.setHandler(
         Suppressed.untilWindowCloses(Suppressed.BufferConfig.unbounded())
     ).toStream()
         .foreach { key, value ->
-            if(value.size > 0) streamArticleService.streamToRealTimeSubscribers(value)
+            if(value.size > 0) streamConnector.streamToRealTimeSubscribers(value)
         }
 }
 

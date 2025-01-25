@@ -1,4 +1,4 @@
-package com.khb.articlerealtimepublishserver.service
+package com.khb.articlerealtimepublishserver.connector
 
 import com.khb.articlerealtimepublishserver.entity.Article
 import org.springframework.context.annotation.Profile
@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 @Component
 @Profile("local")
 class TestService(
-    private val streamArticleService: StreamArticleService
+    private val streamConnector: StreamConnector
 ) {
 
     @Scheduled(
@@ -20,7 +20,7 @@ class TestService(
 
         println("send test article for local profile")
 
-        streamArticleService.streamToRealTimeSubscribers(
+        streamConnector.streamToRealTimeSubscribers(
             listOf(Article(
                 articleId = "test",
                 title = "test",

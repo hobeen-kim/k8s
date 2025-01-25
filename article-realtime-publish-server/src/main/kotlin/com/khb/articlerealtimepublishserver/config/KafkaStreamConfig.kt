@@ -1,6 +1,6 @@
 package com.khb.articlerealtimepublishserver.config
 
-import com.khb.articlerealtimepublishserver.service.StreamArticleService
+import com.khb.articlerealtimepublishserver.connector.StreamConnector
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.StreamsBuilder
@@ -25,7 +25,7 @@ class KafkaStreamConfig(
     private val topicName: String,
 ) {
 
-    @Autowired lateinit var streamArticleService: StreamArticleService
+    @Autowired lateinit var streamConnector: StreamConnector
 
     private val props = mapOf(
         StreamsConfig.BOOTSTRAP_SERVERS_CONFIG to bootstrapServers,
@@ -43,7 +43,7 @@ class KafkaStreamConfig(
         val streamsBuilder = StreamsBuilder()
         val stream: KStream<String, String> = streamsBuilder.stream(topicName)
         stream.setHandler(
-            streamArticleService
+            streamConnector
         )
 
         val topology = streamsBuilder.build()

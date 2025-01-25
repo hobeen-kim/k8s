@@ -2,6 +2,11 @@ spring:
   application:
     name: article-realtime-publish-server
   kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      bootstrap-servers: host.docker.internal:29092
+      topic-name: realtime-article
     streams:
       bootstrap-servers: host.docker.internal:29092
       application-id: web-stomp

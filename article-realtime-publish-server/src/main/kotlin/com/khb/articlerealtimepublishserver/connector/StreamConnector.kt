@@ -1,8 +1,8 @@
-package com.khb.articlerealtimepublishserver.service
+package com.khb.articlerealtimepublishserver.connector
 
 import com.khb.articlerealtimepublishserver.entity.Article
 
-interface StreamArticleService {
+interface StreamConnector {
 
     fun streamToRealTimeSubscribers(articles: List<Article>)
 }

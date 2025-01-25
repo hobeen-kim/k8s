@@ -1,9 +1,10 @@
-package com.khb.articlerealtimepublishserver.service
+package com.khb.articlerealtimepublishserver.connector.stomp
 
 import jakarta.annotation.PostConstruct
 import jakarta.annotation.PreDestroy
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Profile
 import org.springframework.core.env.Environment
 import org.springframework.messaging.simp.stomp.StompSession
 import org.springframework.stereotype.Component
@@ -12,6 +13,7 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
 @Component
+@Profile("stomp")
 class StompSessionProviderImpl(
     private val stompClient: WebSocketStompClient,
     private val environment: Environment,

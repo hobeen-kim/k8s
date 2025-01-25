@@ -1,12 +1,14 @@
-package com.khb.articlerealtimepublishserver.service
+package com.khb.articlerealtimepublishserver.connector.stomp
 
 import org.slf4j.LoggerFactory
+import org.springframework.context.annotation.Profile
 import org.springframework.messaging.simp.stomp.StompHeaders
 import org.springframework.messaging.simp.stomp.StompSession
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter
 import org.springframework.stereotype.Component
 
 @Component
+@Profile("stomp")
 class CustomStompSessionHandler(
     private val eventPublisher: StompEventPublisher
 ): StompSessionHandlerAdapter() {

@@ -1,4 +1,4 @@
-package com.khb.articlerealtimepublishserver.service
+package com.khb.articlerealtimepublishserver.connector.stomp
 
 import org.springframework.messaging.simp.stomp.StompSession
 

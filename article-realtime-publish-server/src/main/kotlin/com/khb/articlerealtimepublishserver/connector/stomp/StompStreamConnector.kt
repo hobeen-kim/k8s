@@ -1,27 +1,25 @@
-package com.khb.articlerealtimepublishserver.service
+package com.khb.articlerealtimepublishserver.connector.stomp
 
+import com.khb.articlerealtimepublishserver.connector.StreamConnector
 import com.khb.articlerealtimepublishserver.entity.Article
-import jakarta.annotation.PostConstruct
-import jakarta.annotation.PreDestroy
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.core.env.Environment
-import org.springframework.messaging.simp.stomp.StompHeaders
+import org.springframework.context.annotation.Profile
 import org.springframework.messaging.simp.stomp.StompSession
-import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter
 import org.springframework.stereotype.Service
-import org.springframework.web.socket.messaging.WebSocketStompClient
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicLong
 
+/**
+ * stomp를 이용한 실시간 스트리밍 커넥터
+ * connection closed 가 간헐적으로 일어나서 kafka 에 바로 넣는걸로 대체
+ */
 @Service
-class StompStreamArticleService(
+@Profile("stomp")
+class StompStreamConnector(
     private val stompSessionProvider: StompSessionProvider,
-): StreamArticleService {
+): StreamConnector {
 
     private lateinit var stompSession: StompSession
 
-    private val logger = LoggerFactory.getLogger(StompStreamArticleService::class.java)
+    private val logger = LoggerFactory.getLogger(StompStreamConnector::class.java)
 
     override fun streamToRealTimeSubscribers(articles: List<Article>) {
         try {
