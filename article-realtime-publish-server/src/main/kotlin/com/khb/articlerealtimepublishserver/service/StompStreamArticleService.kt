@@ -28,6 +28,8 @@ class StompStreamArticleService(
             checkConnection()
 
             stompSession.send("/publish/chat.1", articles)
+
+            logger.info("Message sent to subscribers, size: ${articles.size}")
         } catch (e: Exception) {
             logger.error("Failed to send message: ${e.message}")
         }
