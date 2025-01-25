@@ -1,6 +1,12 @@
 spring:
   application:
     name: article-was-server
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: group_1
   h2:
     console:
       enabled: true
@@ -17,3 +23,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
+
+custom:
+  kafka:
+    realtime-article:
+      topic: realtime-article-dev

@@ -1,6 +1,16 @@
 spring:
   application:
     name: article-was-server
+  kafka:
+    consumer:
+      bootstrap-servers: host.docker.internal:29092
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: ${HOSTNAME} # This is a special environment variable that is set by Kubernetes
+    producer:
+      bootstrap-servers: host.docker.internal:29092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
   h2:
     console:
       enabled: true
@@ -17,3 +27,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
+
+custom:
+  kafka:
+    realtime-article:
+      topic: realtime-article
