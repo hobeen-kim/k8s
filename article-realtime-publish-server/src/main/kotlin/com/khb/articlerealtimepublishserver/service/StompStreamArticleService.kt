@@ -25,6 +25,9 @@ class StompStreamArticleService(
 
     override fun streamToRealTimeSubscribers(articles: List<Article>) {
         try {
+
+            logger.info("Message prepared to send to subscribers, size: ${articles.size}")
+
             checkConnection()
 
             stompSession.send("/publish/chat.1", articles)
