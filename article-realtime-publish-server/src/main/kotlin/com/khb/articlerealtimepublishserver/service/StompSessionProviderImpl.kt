@@ -67,6 +67,8 @@ class StompSessionProviderImpl(
             "ws://$stompUrl:$stompPort/ws-connect",
             customStompSessionHandler
         ).get(5, TimeUnit.SECONDS)
+
+        stompSession.setAutoReceipt(true)
     }
 
     private fun reconnect() {

@@ -27,9 +27,12 @@ class StompStreamArticleService(
         try {
             checkConnection()
 
+            logger.info("Sending message... : ${articles.size}")
+
             val receipt = stompSession.send("/publish/chat.1", articles)
 
             logger.info("receipt Id : ${receipt.receiptId}")
+            logger.info("message sent : ${articles.size}")
         } catch (e: Exception) {
             logger.error("Failed to send message: ${e.message}")
         }
