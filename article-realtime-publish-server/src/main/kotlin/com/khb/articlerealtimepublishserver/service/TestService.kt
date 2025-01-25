@@ -17,6 +17,9 @@ class TestService(
         fixedRate = 10_000L
     )
     fun test() {
+
+        println("send test article for local profile")
+
         streamArticleService.streamToRealTimeSubscribers(
             listOf(Article(
                 articleId = "test",

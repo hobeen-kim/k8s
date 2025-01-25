@@ -16,71 +16,27 @@ import java.util.concurrent.atomic.AtomicLong
 
 @Service
 class StompStreamArticleService(
-    private val stompClient: WebSocketStompClient,
-    private val environment: Environment,
-
-    @Value("\${custom.stomp.url}")
-    private val stompUrl: String,
-    @Value("\${custom.stomp.port}")
-    private val stompPort: Int
+    private val stompSessionProvider: StompSessionProvider,
 ): StreamArticleService {
 
     private lateinit var stompSession: StompSession
 
     private val logger = LoggerFactory.getLogger(StompStreamArticleService::class.java)
 
-    private val reconnectCount = AtomicLong(3)
-
-    @PostConstruct
-    fun initialize() {
-        if (environment.activeProfiles.contains("prod") || environment.activeProfiles.contains("local")) {
-            initializeConnection()
-        }
-    }
-
     override fun streamToRealTimeSubscribers(articles: List<Article>) {
         try {
-            if (!stompSession.isConnected) {
-                reconnect()
-            }
+            checkConnection()
+
             stompSession.send("/publish/chat.1", articles)
         } catch (e: Exception) {
             logger.error("Failed to send message: ${e.message}")
-            reconnect()
         }
     }
 
-    private fun initializeConnection() {
-        stompSession = stompClient.connectAsync(
-            "ws://$stompUrl:$stompPort/ws-connect",
-            object : StompSessionHandlerAdapter() {
-                override fun handleTransportError(session: StompSession, exception: Throwable) {
-                    // 연결 에러 처리
-                    logger.error("Transport error: ${exception.message}")
-                    reconnect()
-                }
+    private fun checkConnection() {
 
-                override fun afterConnected(session: StompSession, connectedHeaders: StompHeaders) {
-                    reconnectCount.set(3)
-                }
-            }
-        ).get(5, TimeUnit.SECONDS)
-    }
-
-    private fun reconnect() {
-        try {
-            if(reconnectCount.getAndDecrement() >= 0) {
-                initializeConnection()
-            }
-        } catch (e: Exception) {
-            logger.error("Reconnection failed: ${e.message}")
-        }
-    }
-
-    @PreDestroy
-    fun cleanup() {
-        if (stompSession.isConnected) {
-            stompSession.disconnect()
+        if (!::stompSession.isInitialized || !stompSession.isConnected) {
+            stompSession = stompSessionProvider.getSession()
         }
     }
 }

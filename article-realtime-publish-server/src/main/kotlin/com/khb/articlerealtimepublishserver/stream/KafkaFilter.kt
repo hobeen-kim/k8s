@@ -49,7 +49,7 @@ fun KStream<String, String>.setHandler(
         Suppressed.untilWindowCloses(Suppressed.BufferConfig.unbounded())
     ).toStream()
         .foreach { key, value ->
-            streamArticleService.streamToRealTimeSubscribers(value)
+            if(value.size > 0) streamArticleService.streamToRealTimeSubscribers(value)
         }
 }
 
