@@ -41,7 +41,11 @@ class StompStreamArticleService(
     private fun checkConnection() {
 
         if (!::stompSession.isInitialized || !stompSession.isConnected) {
+            logger.info("Connection is not established, try to connect")
             stompSession = stompSessionProvider.getSession()
+            logger.info("Connection is established")
+        } else {
+            logger.info("Connection is already established")
         }
     }
 }
