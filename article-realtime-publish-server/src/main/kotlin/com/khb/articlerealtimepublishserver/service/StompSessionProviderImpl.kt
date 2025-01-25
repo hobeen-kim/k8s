@@ -46,6 +46,11 @@ class StompSessionProviderImpl(
 
     @PostConstruct
     fun initialize() {
+
+        if (invalidProfile()) {
+            return
+        }
+
         val newHttpClient = HttpClient.newHttpClient()
 
         val request = HttpRequest.newBuilder()
@@ -61,6 +66,8 @@ class StompSessionProviderImpl(
             initializeConnection()
         }
     }
+
+    private fun invalidProfile() = !environment.activeProfiles.contains("prod") && !environment.activeProfiles.contains("local")
 
     private fun initializeConnection() {
         stompSession = stompClient.connectAsync(
