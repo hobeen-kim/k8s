@@ -27,5 +27,5 @@ spring:
 custom:
   data:
     mongodb:
-      article-collection: article-dev
-      article-rank-collection: article-rank-dev
+      article-collection: article
+      article-rank-collection: article-rank

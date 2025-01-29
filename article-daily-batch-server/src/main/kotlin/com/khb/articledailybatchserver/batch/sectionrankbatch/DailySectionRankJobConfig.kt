@@ -1,9 +1,11 @@
 package com.khb.articledailybatchserver.batch.sectionrankbatch
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.khb.articledailybatchserver.batch.sectionrankbatch.dto.ArticleReport
 import com.khb.articledailybatchserver.batch.sectionrankbatch.dto.YnaArticleRankList
 import com.khb.articledailybatchserver.entity.ArticleRank
 import com.khb.articledailybatchserver.repository.ArticleRankRepository
+import com.khb.articledailybatchserver.repository.ArticleRepository
 import org.slf4j.LoggerFactory
 import org.springframework.batch.core.Job
 import org.springframework.batch.core.Step
@@ -13,41 +15,26 @@ import org.springframework.batch.core.job.builder.JobBuilder
 import org.springframework.batch.core.launch.support.RunIdIncrementer
 import org.springframework.batch.core.repository.JobRepository
 import org.springframework.batch.core.step.builder.StepBuilder
-import org.springframework.batch.core.step.tasklet.Tasklet
 import org.springframework.batch.item.ItemProcessor
-import org.springframework.batch.item.data.RepositoryItemReader
 import org.springframework.batch.item.data.RepositoryItemWriter
-import org.springframework.batch.item.data.builder.RepositoryItemReaderBuilder
 import org.springframework.batch.item.data.builder.RepositoryItemWriterBuilder
-import org.springframework.batch.item.json.JacksonJsonObjectReader
-import org.springframework.batch.item.json.JsonItemReader
-import org.springframework.batch.item.json.builder.JsonItemReaderBuilder
-import org.springframework.batch.repeat.RepeatStatus
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.core.io.ByteArrayResource
-import org.springframework.core.io.Resource
-import org.springframework.core.io.UrlResource
-import org.springframework.data.domain.Sort
 import org.springframework.transaction.PlatformTransactionManager
-import java.net.URI
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
 import java.time.LocalDate
-import java.util.*
 
 
 @Configuration
 class DailySectionRankJobConfig(
     private val articleRankRepository: ArticleRankRepository,
+    private val articleRepository: ArticleRepository,
     private val objectMapper: ObjectMapper,
 ) {
 
     companion object {
         const val JOB_NAME = "dailySectionRankJob"
-        const val STEP_NAME = "dailySectionRankStep"
+        const val EXTRACT_STEP_NAME = "dailyExtractRankStep"
+        const val REPORT_STEP_NAME = "dailyReportRankStep"
     }
 
     private val logger = LoggerFactory.getLogger(this::class.java)
@@ -61,49 +48,60 @@ class DailySectionRankJobConfig(
         transactionManager: PlatformTransactionManager,
     ): Job {
         return JobBuilder(JOB_NAME, jobRepository)
-        .incrementer(RunIdIncrementer()) // sequential id
-            .start(dailySectionRankStep(jobRepository, transactionManager)) // step 설정
-            .build();
+            .incrementer(RunIdIncrementer()) // sequential id
+            .start(dailyExtractRankStep(jobRepository, transactionManager))
+            .next(dailyReportRankStep(jobRepository, transactionManager))
+            .build()
     }
 
     @Bean
     @JobScope
-    fun dailySectionRankStep(
+    fun dailyExtractRankStep(
         jobRepository: JobRepository,
         transactionManager: PlatformTransactionManager
     ): Step {
-        return StepBuilder(STEP_NAME, jobRepository).chunk<YnaArticleRankList, ArticleRank>(100, transactionManager)
-            .reader(articleRankReader())
+        return StepBuilder(EXTRACT_STEP_NAME, jobRepository).chunk<YnaArticleRankList, ArticleRank>(100, transactionManager)
+            .reader(articleRankHttpReader())
             .processor(articleRankProcessor())
             .writer(articleRankWriter())
             .build();
     }
 
     @Bean
+    @JobScope
+    fun dailyReportRankStep(
+        jobRepository: JobRepository,
+        transactionManager: PlatformTransactionManager
+    ): Step {
+        return StepBuilder(REPORT_STEP_NAME, jobRepository).chunk<ArticleRank, ArticleReport>(100, transactionManager)
+            .reader(articleRankReader())
+            .processor(articleMappingProcessor())
+            .writer(articleReportSender())
+            .build();
+    }
+
+    @Bean
     @StepScope
-    fun articleRankReader(
-        @Value("#{jobParameters['section']}") section: String? = null
-    ): ArticleRankItemReader {
-        return ArticleRankItemReader(
+    fun articleRankHttpReader(
+    ): ArticleRankJsonItemReader {
+        return ArticleRankJsonItemReader(
             objectMapper = objectMapper,
-            section = section ?: ""
         )
     }
 
     @Bean
     @StepScope
     fun articleRankProcessor(
-        @Value("#{jobParameters['section']}") section: String? = "all"
     ): ItemProcessor<YnaArticleRankList, ArticleRank> {
 
         return ItemProcessor<YnaArticleRankList, ArticleRank> { ynaArticleRankList ->
 
             if(ynaArticleRankList.results.isEmpty()) {
-                logger.info("No articles in section: $section")
                 return@ItemProcessor null
             }
 
             val articles = ynaArticleRankList.results
+            val section = ynaArticleRankList.section
 
             val articleIds = articles.map { it.cr_id }
 
@@ -122,10 +120,49 @@ class DailySectionRankJobConfig(
     @StepScope
     fun articleRankWriter(): RepositoryItemWriter<ArticleRank> {
 
+        logger.info("articleRankWriter")
+
         return RepositoryItemWriterBuilder<ArticleRank>()
             .repository(articleRankRepository)
             .methodName("insert")
             .build()
+    }
+
+    @Bean
+    @StepScope
+    fun articleRankReader(
+    ): MongoArticlePagedReader {
+        return MongoArticlePagedReader(
+            articleRankRepository = articleRankRepository,
+        )
+    }
+
+    @Bean
+    @StepScope
+    fun articleMappingProcessor(): ItemProcessor<ArticleRank, ArticleReport> {
+        return ItemProcessor<ArticleRank, ArticleReport> { articleRank ->
+
+            val section = articleRank.section
+            val articleIds = articleRank.articleIds
+
+            val articles = articleRepository.findAllById(articleIds)
+
+            ArticleReport(
+                section = section,
+                articles = articles,
+            )
+        }
+    }
+
+    @Bean
+    @StepScope
+    fun articleReportSender(): ArticleSender {
+
+        logger.info("articleReportSender")
+
+        return ArticleSender(
+            date = LocalDate.now()
+        )
     }
 
 }

@@ -19,24 +19,11 @@ class JobScheduler(
 
     @Scheduled(cron = "0 * * * * *")
     fun runDailyReport() {
-        runDailySectionRankJob()
+        val jobParameters = JobParametersBuilder()
+            .toJobParameters()
 
-        sendReportJob()
-    }
+        val jobExecution = jobLauncher.run(dailySectionRankJob, jobParameters)
 
-    private fun runDailySectionRankJob() {
-        for (section in SECTIONS) {
-            val jobParameters = JobParametersBuilder()
-                .addString("section", section)
-                .toJobParameters()
-
-            val jobExecution = jobLauncher.run(dailySectionRankJob, jobParameters)
-
-            logger.info("$section Job Execution: ${jobExecution.status}")
-        }
-    }
-
-    private fun sendReportJob() {
-
+        logger.info("Job Execution: ${jobExecution.status}")
     }
 }
