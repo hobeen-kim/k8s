@@ -7,10 +7,6 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       group-id: ${HOSTNAME} # This is a special environment variable that is set by Kubernetes
-    producer:
-      bootstrap-servers: host.docker.internal:29092
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
   h2:
     console:
       enabled: true
