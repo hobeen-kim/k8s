@@ -20,6 +20,6 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "prod"
-          image: sksjsksh32/article-realtime-publish-server:210b9151805ada6346cb189aed19dbd7f2b37e1e
+          image: sksjsksh32/article-realtime-publish-server:4f85fe830d938ef3f7039da9f5ff653efac60a52
           imagePullPolicy: IfNotPresent
       restartPolicy: Always

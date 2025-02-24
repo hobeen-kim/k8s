@@ -22,7 +22,7 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
-          image: sksjsksh32/article-was-server:e5b171c08bd3cf581f1a43bc2793cf0ce204db2b
+          image: sksjsksh32/article-was-server:4f85fe830d938ef3f7039da9f5ff653efac60a52
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
