@@ -7,9 +7,9 @@ tar -xvf ~/kafka/kafka_2.13-3.9.0.tgz -C ~/kafka
 
 # 카프카 설정 (listener 추가)
 # shellcheck disable=SC2129
-echo "listeners=LOCAL://localhost:9092,DOCKER://localhost:29092" >> ~/kafka/kafka_2.13-3.9.0/config/server.properties
-echo "advertised.listeners=LOCAL://localhost:9092,DOCKER://host.docker.internal:29092" >> ~/kafka/kafka_2.13-3.9.0/config/server.properties
-echo "listener.security.protocol.map=LOCAL:PLAINTEXT,DOCKER:PLAINTEXT" >> ~/kafka/kafka_2.13-3.9.0/config/server.properties
+echo "listeners=LOCAL://localhost:9092,POD://localhost:29092" >> ~/kafka/kafka_2.13-3.9.0/config/server.properties
+echo "advertised.listeners=LOCAL://localhost:9092,POD://192.168.45.192:29092" >> ~/kafka/kafka_2.13-3.9.0/config/server.properties
+echo "listener.security.protocol.map=LOCAL:PLAINTEXT,POD:PLAINTEXT" >> ~/kafka/kafka_2.13-3.9.0/config/server.properties
 echo "inter.broker.listener.name=LOCAL" >> ~/kafka/kafka_2.13-3.9.0/config/server.properties
 
 # zookeeper 구동
