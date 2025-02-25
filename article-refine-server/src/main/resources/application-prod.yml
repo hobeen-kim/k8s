@@ -3,10 +3,10 @@ spring:
     name: article-refine-server
   kafka:
     consumer:
-      bootstrap-servers: kafka-service:29092
+      bootstrap-servers: 192.168.45.192:29092
       group-id: group_prod
     producer:
-      bootstrap-servers: kafka-service:29092
+      bootstrap-servers: 192.168.45.192:29092
   data:
     mongodb:
       uri: mongodb://admin:password123@mongodb-service:31200/k8s?authSource=admin
