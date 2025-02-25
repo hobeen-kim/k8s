@@ -9,7 +9,7 @@ spring:
       bootstrap-servers: host.docker.internal:29092
   data:
     mongodb:
-      uri: mongodb://admin:password123@host.docker.internal:31200/k8s?authSource=admin
+      uri: mongodb://admin:password123@mongodb-service:31200/k8s?authSource=admin
 
 custom:
   data:
