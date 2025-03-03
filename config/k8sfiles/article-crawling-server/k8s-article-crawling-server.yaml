@@ -14,6 +14,6 @@ spec:
               env:
                 - name: PROFILE
                   value: "prod"
-              image: sksjsksh32/article-crawling-server:93dceb0003847acf3feac06c73f85ec6cc298759
+              image: sksjsksh32/article-crawling-server:555aa3cc371b9f84a3f5acbec9598a2319012cc8
               imagePullPolicy: IfNotPresent
           restartPolicy: OnFailure
