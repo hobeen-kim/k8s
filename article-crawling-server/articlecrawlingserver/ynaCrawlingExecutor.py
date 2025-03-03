@@ -11,7 +11,6 @@ from producer.producer import send_data
 # 섹션
 sections = {
     "politics": "정치",
-    "north-korea": "북한",
     "economy": "경제",
     "market-plus": "마켓+",
     "industry": "산업",
@@ -62,18 +61,18 @@ async def get_news_list(session: aiohttp.ClientSession, url: str, page: int, sec
         html = await response.text()
         soup = BeautifulSoup(html, 'html.parser')
         # list-type038 클래스 내의 뉴스 항목들을 찾음
-        news_items = soup.select('.list-type038 .item-box01')
+        news_items = soup.select('.list-type212 .item-box01')
 
         # 각 뉴스 항목에 대한 태스크 생성
         tasks = []
 
         for item in news_items:
             news_link = item.select_one('.news-con .tit-wrap')
-            time = item.select_one('.info-box01 .txt-time').text.strip()
+            time = item.select_one('.txt-time').text.strip()
 
             if news_link:
                 title = news_link.select_one('.tit-news').text.strip()
-                news_url = news_link['href']
+                news_url = news_link.select_one('a')['href']
                 if not news_url.startswith('http'):
                     news_url = 'https://www.yna.co.kr' + news_url
 
@@ -119,7 +118,7 @@ async def extract_contentTags(url: str, session: aiohttp.ClientSession):
             tags = []
             keyword_zone = soup.select_one('.keyword-zone')
             if keyword_zone:
-                tag_elements = keyword_zone.select('.list-text01.style03 li a')
+                tag_elements = keyword_zone.select('.list01 .swiper-slide .txt01')
                 tags = [tag.text.strip('#') for tag in tag_elements]
 
             return article.text, tags
@@ -140,6 +139,10 @@ if __name__ == "__main__":
     print(f"\n총 {len(news_articles)}개의 기사를 찾았습니다. 소요시간: {time.time() - start_time:.2f}초")
 
     start_time = time.time()
+
+    #print
+    for article in news_articles:
+        print(article.json())
 
     loop.run_until_complete(send_data(news_articles))
 
