@@ -9,7 +9,7 @@ spring:
       bootstrap-servers: 192.168.45.192:29092
   data:
     mongodb:
-      uri: mongodb://admin:password123@mongodb-service:31200/k8s?authSource=admin
+      uri: mongodb://172.17.0.1:27017/k8s?authSource=admin
 
 custom:
   data:
