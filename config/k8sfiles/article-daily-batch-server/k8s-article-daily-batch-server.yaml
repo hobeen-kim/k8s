@@ -12,7 +12,7 @@ spec:
           containers:
             - name: daily-batch-server
               env:
-                - name: PROFILE
+                - name: SPRING_PROFILES_ACTIVE
                   value: "prod"
               image: sksjsksh32/article-daily-batch-server:4a6004894a9aa1aea8043512c6c6bfcbfd0ec229
               imagePullPolicy: IfNotPresent
