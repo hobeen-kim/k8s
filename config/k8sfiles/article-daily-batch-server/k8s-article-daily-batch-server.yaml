@@ -19,6 +19,6 @@ spec:
                     secretKeyRef:
                       name: article-batch-secrets
                       key: slack-url
-              image: sksjsksh32/article-daily-batch-server:4a6004894a9aa1aea8043512c6c6bfcbfd0ec229
+              image: sksjsksh32/article-daily-batch-server:39b4a5a2316b97e0b1743c8ef87265f82128d292
               imagePullPolicy: IfNotPresent
           restartPolicy: OnFailure
