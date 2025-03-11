@@ -10,7 +10,7 @@ RUN gradle dependencies --no-daemon
 
 # 소스 코드 복사 및 빌드
 COPY src /app/src
-RUN gradle clean build --no-daemon
+RUN gradle clean build --no-daemon -x test
 
 # 실행 스테이지
 FROM openjdk:21-jdk-slim

@@ -7,7 +7,7 @@ class SlackSenderTest {
 @Test
 fun `send with recipient list`() {
     // Arrange
-    val slackSender = SlackSender()
+    val slackSender = SlackSender("https://test.com")
     val title = "Test Title"
     val text = "Test Text"
     val to = listOf("Test Channel 1", "Test Channel 2")
@@ -22,7 +22,7 @@ fun `send with recipient list`() {
     @Test
     fun `send with single recipient string`() {
         // Arrange
-        val slackSender = SlackSender()
+        val slackSender = SlackSender("https://test.com")
         val title = "Test Title"
         val text = "Test Text"
         val to = "Test Channel"
