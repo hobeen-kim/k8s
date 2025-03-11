@@ -3,7 +3,7 @@ spring:
     name: article-daily-batch-server
   data:
     mongodb:
-      uri: mongodb://admin:password123@host.docker.internal:31200/k8s?authSource=admin
+      uri: mongodb://172.17.0.1:27017/k8s?authSource=admin
   h2:
     console:
       enabled: true

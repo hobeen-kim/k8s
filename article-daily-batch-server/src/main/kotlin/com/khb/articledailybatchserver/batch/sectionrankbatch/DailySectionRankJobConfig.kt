@@ -7,11 +7,11 @@ import com.khb.articledailybatchserver.entity.ArticleRank
 import com.khb.articledailybatchserver.repository.ArticleRankRepository
 import com.khb.articledailybatchserver.repository.ArticleRepository
 import org.slf4j.LoggerFactory
-import org.springframework.batch.core.Job
-import org.springframework.batch.core.Step
+import org.springframework.batch.core.*
 import org.springframework.batch.core.configuration.annotation.JobScope
 import org.springframework.batch.core.configuration.annotation.StepScope
 import org.springframework.batch.core.job.builder.JobBuilder
+import org.springframework.batch.core.launch.JobLauncher
 import org.springframework.batch.core.launch.support.RunIdIncrementer
 import org.springframework.batch.core.repository.JobRepository
 import org.springframework.batch.core.step.builder.StepBuilder
@@ -29,6 +29,8 @@ class DailySectionRankJobConfig(
     private val articleRankRepository: ArticleRankRepository,
     private val articleRepository: ArticleRepository,
     private val objectMapper: ObjectMapper,
+    private val jobLauncher: JobLauncher,
+
 ) {
 
     companion object {
@@ -39,10 +41,27 @@ class DailySectionRankJobConfig(
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
+    @Bean
+    fun jobParameters(): JobParameters {
+        return JobParametersBuilder()
+            .toJobParameters()
+    }
+
+    @Bean
+    fun runJob(
+        jobRepository: JobRepository,
+        transactionManager: PlatformTransactionManager,
+    ): JobExecution {
+        val parameters = jobParameters()
+        return jobLauncher.run(dailySectionRankJob(
+            jobRepository,
+            transactionManager
+        ), parameters)
+    }
+
     /**
      * Job 등록
      */
-    @Bean
     fun dailySectionRankJob(
         jobRepository: JobRepository,
         transactionManager: PlatformTransactionManager,
