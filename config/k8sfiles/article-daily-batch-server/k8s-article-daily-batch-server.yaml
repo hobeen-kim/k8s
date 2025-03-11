@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: article-daily-batch-server
+spec:
+  schedule: "0/5 * * * *"
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 100
+      template:
+        spec:
+          containers:
+            - name: daily-batch-server
+              env:
+                - name: PROFILE
+                  value: "prod"
+              image: sksjsksh32/article-daily-batch-server:4a6004894a9aa1aea8043512c6c6bfcbfd0ec229
+              imagePullPolicy: IfNotPresent
+          restartPolicy: OnFailure
