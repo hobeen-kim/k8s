@@ -1,1 +1,3 @@
 .idea/
+
+config/k8sfiles/secret/secret.yaml

@@ -22,10 +22,12 @@ spring:
     init:
       schema-locations: classpath:org/springframework/batch/core/schema-h2.sql
 
-
-
 custom:
   data:
     mongodb:
       article-collection: article
       article-rank-collection: article-rank
+
+sender:
+  slack:
+    url: test

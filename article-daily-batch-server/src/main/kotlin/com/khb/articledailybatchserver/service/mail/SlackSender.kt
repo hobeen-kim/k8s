@@ -1,6 +1,6 @@
 package com.khb.articledailybatchserver.service.mail
 
-import com.khb.articledailybatchserver.batch.sectionrankbatch.dto.YnaArticleRankList
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Service
 import java.net.URI
@@ -11,6 +11,8 @@ import java.net.http.HttpResponse
 @Service
 @Primary
 class SlackSender(
+    @Value("\${sender.slack.url}")
+    private val slackWebhookUrl: String,
 ): MailSender {
     override fun send(title: String, text: String, to: List<String>) {
         val httpClient = HttpClient.newHttpClient()
@@ -22,7 +24,7 @@ class SlackSender(
     """.trimIndent()
 
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("https://hooks.slack.com/services/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"))
+            .uri(URI.create(slackWebhookUrl))
             .header("Content-Type", "application/json")
             .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
             .build()

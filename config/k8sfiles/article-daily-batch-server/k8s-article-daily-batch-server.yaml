@@ -14,6 +14,11 @@ spec:
               env:
                 - name: SPRING_PROFILES_ACTIVE
                   value: "prod"
+                - name: SENDER_SLACK_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: article-batch-secrets
+                      key: slack-url
               image: sksjsksh32/article-daily-batch-server:4a6004894a9aa1aea8043512c6c6bfcbfd0ec229
               imagePullPolicy: IfNotPresent
           restartPolicy: OnFailure
