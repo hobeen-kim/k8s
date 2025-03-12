@@ -3,9 +3,14 @@ package com.khb.articledailybatchserver.batch.sectionrankbatch
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.khb.articledailybatchserver.batch.sectionrankbatch.dto.ArticleReport
 import com.khb.articledailybatchserver.batch.sectionrankbatch.dto.YnaArticleRankList
+import com.khb.articledailybatchserver.batch.sectionrankbatch.writer.ArticleSender
 import com.khb.articledailybatchserver.entity.ArticleRank
 import com.khb.articledailybatchserver.repository.ArticleRankRepository
 import com.khb.articledailybatchserver.repository.ArticleRepository
+import com.khb.articledailybatchserver.service.kakao.KakaoSender
+import com.khb.articledailybatchserver.service.mail.MailSender
+import com.khb.articledailybatchserver.service.member.MemberService
+import com.khb.articledailybatchserver.service.member.MockMemberService
 import org.slf4j.LoggerFactory
 import org.springframework.batch.core.*
 import org.springframework.batch.core.configuration.annotation.JobScope
@@ -30,7 +35,9 @@ class DailySectionRankJobConfig(
     private val articleRepository: ArticleRepository,
     private val objectMapper: ObjectMapper,
     private val jobLauncher: JobLauncher,
-
+    private val memberService: MemberService,
+    private val mailSender: MailSender,
+    private val kakaoSender: KakaoSender,
 ) {
 
     companion object {
@@ -180,8 +187,10 @@ class DailySectionRankJobConfig(
         logger.info("articleReportSender")
 
         return ArticleSender(
-            date = LocalDate.now()
+            date = LocalDate.now(),
+            memberService = memberService,
+            mailSender = mailSender,
+            kakaoSender = kakaoSender,
         )
     }
-
 }
