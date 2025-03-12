@@ -20,7 +20,12 @@ open class ArticleSender(
 
         val subscriptionInfos = memberService.findMemberSubscriptionInfos()
 
+        println("subscriptionInfos.size: ${subscriptionInfos.size}")
+
         subscriptionInfos.forEach { info ->
+
+            println("each info: ${info.email}")
+            
             val personalReport = createEmailReport(articleReports, info.sections)
 
             mailSender.send("Article Daily Report", personalReport, info.email)
@@ -42,8 +47,6 @@ open class ArticleSender(
 
             sb.append(articleReport.toEmailReportFormat())
         }
-
-        println("$sb")
 
         return sb.toString()
     }

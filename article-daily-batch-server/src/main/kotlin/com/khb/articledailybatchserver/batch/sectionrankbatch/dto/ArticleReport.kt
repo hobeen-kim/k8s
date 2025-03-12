@@ -19,7 +19,7 @@ data class ArticleReport (
         }
 
         return """
-            <h1><$section></h1>
+            <h1>$section</h1>
             $sb
         """.trimIndent()
     }
