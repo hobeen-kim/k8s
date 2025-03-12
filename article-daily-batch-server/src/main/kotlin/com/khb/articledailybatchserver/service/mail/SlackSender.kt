@@ -23,13 +23,19 @@ class SlackSender(
         }
     """.trimIndent()
 
+        println("slackWebhookUrl : $slackWebhookUrl")
+
         val request = HttpRequest.newBuilder()
             .uri(URI.create(slackWebhookUrl))
             .header("Content-Type", "application/json")
             .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
             .build()
 
-        httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+        val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+
+        if(response.statusCode() != 200) {
+            println("response is not 200, $response")
+        }
     }
 
     override fun send(title: String, text: String, to: String) {
