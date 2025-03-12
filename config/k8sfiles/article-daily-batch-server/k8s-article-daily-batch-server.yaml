@@ -6,7 +6,7 @@ spec:
   schedule: "0/3 * * * *"
   jobTemplate:
     spec:
-      ttlSecondsAfterFinished: 300
+      ttlSecondsAfterFinished: 180
       template:
         spec:
           containers:
@@ -19,6 +19,6 @@ spec:
                     secretKeyRef:
                       name: article-batch-secrets
                       key: slack-url
-              image: sksjsksh32/article-daily-batch-server:912f53616b308d6a4c19bbba0affb7c7788e0eaf
+              image: sksjsksh32/article-daily-batch-server:9839743515e45f915824a30d36e9d0fe8fdee045
               imagePullPolicy: IfNotPresent
           restartPolicy: OnFailure
