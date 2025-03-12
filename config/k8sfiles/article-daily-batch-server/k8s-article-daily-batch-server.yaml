@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: article-daily-batch-server
 spec:
-  schedule: "0/5 * * * *"
+  schedule: "0/3 * * * *"
   jobTemplate:
     spec:
       ttlSecondsAfterFinished: 300
@@ -19,6 +19,6 @@ spec:
                     secretKeyRef:
                       name: article-batch-secrets
                       key: slack-url
-              image: sksjsksh32/article-daily-batch-server:d875762c35eb9881227d09ca9a35406d73736fb2
+              image: sksjsksh32/article-daily-batch-server:912f53616b308d6a4c19bbba0affb7c7788e0eaf
               imagePullPolicy: IfNotPresent
           restartPolicy: OnFailure
