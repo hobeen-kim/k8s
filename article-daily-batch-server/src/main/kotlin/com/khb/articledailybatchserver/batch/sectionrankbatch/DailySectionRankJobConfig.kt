@@ -25,11 +25,13 @@ import org.springframework.batch.item.data.RepositoryItemWriter
 import org.springframework.batch.item.data.builder.RepositoryItemWriterBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 import org.springframework.transaction.PlatformTransactionManager
 import java.time.LocalDate
 
 
 @Configuration
+@Profile("!test")
 class DailySectionRankJobConfig(
     private val articleRankRepository: ArticleRankRepository,
     private val articleRepository: ArticleRepository,
