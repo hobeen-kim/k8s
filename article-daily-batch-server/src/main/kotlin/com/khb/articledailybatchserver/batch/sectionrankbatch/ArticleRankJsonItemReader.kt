@@ -28,7 +28,7 @@ open class ArticleRankJsonItemReader(
 
         for (section in SECTIONS) {
             val request = HttpRequest.newBuilder()
-                .uri(URI.create("https://rts.cdp.yna.co.kr/api/v2/rts-stats?size=20&${getSectionQuery(section)}"))
+                .uri(URI.create("https://rts.cdp.yna.co.kr/api/v2/rts-stats?size=5&${getSectionQuery(section)}&${getTimeQuery()}"))
                 .GET()
                 .build()
             articleRequestReader.request(request)
@@ -45,5 +45,9 @@ open class ArticleRankJsonItemReader(
         } else {
             "section=$section"
         }
+    }
+
+    private fun getTimeQuery(): String {
+        return "upload-minute-from=4000&upload-minute-to=400"
     }
 }
