@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: article-daily-batch-server
 spec:
-  schedule: "0/3 * * * *"
+  schedule: "30 8 * * *"
   jobTemplate:
     spec:
       ttlSecondsAfterFinished: 180
